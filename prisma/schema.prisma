@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// User model
+model User {
+  user_id             Int                @id @default(autoincrement())
+  lastname            String
+  firstname           String
+  midname             String?
+  dob                 DateTime @db.Date
+  age                 Int
+  hashed_password     String
+  salt                String
+  email               String
+  sex                 Sex
+  role                Role
+  is_active           Boolean
+  is_confirmed_email  Boolean
+  notification_period Int
+  created_at          DateTime
+  edited_at           DateTime
+  children            UserChild[]
+  user_vaccines       UserVaccine[]
+  user_notifications  UserNotification[]
+  Child               Child[]
+}
+
+model Child {
+  child_id     Int            @id @default(autoincrement())
+  lastname     String
+  firstname    String
+  midname      String?
+  dob          DateTime @db.Date
+  age          Int
+  sex          Sex
+  is_active    Boolean
+  created_at   DateTime
+  updated_at   DateTime
+  user         User           @relation(fields: [user_id], references: [user_id])
+  user_id      Int
+  UserChild    UserChild[]
+  ChildVaccine ChildVaccine[]
+}
+
+model UserChild {
+  user_child_id Int   @id @default(autoincrement())
+  user          User  @relation(fields: [user_id], references: [user_id])
+  user_id       Int
+  child         Child @relation(fields: [child_id], references: [child_id])
+  child_id      Int
+}
+
+// Vaccine model
+model Vaccine {
+  vaccine_id    Int            @id @default(autoincrement())
+  name          String
+  type          VaccineType
+  min_age       Int
+  max_age       Int
+  created_at    DateTime
+  edited_at     DateTime
+  description   String
+  user_vaccines UserVaccine[]
+  ChildVaccine  ChildVaccine[]
+}
+
+// UserVaccine model
+model UserVaccine {
+  user_vaccine_id  Int      @id @default(autoincrement())
+  vaccine          Vaccine  @relation(fields: [vaccine_id], references: [vaccine_id])
+  vaccine_id       Int
+  user             User     @relation(fields: [user_id], references: [user_id])
+  user_id          Int
+  medical_center   String?
+  dose             Float?
+  serial_number    String?
+  vaccination_date DateTime? @db.Date
+  commentary       String?
+  created_at       DateTime
+  update_at        DateTime
+}
+
+model ChildVaccine {
+  child_vaccine_id Int      @id @default(autoincrement())
+  vaccine          Vaccine  @relation(fields: [vaccine_id], references: [vaccine_id])
+  vaccine_id       Int
+  child            Child    @relation(fields: [child_id], references: [child_id])
+  child_id         Int
+  medical_center   String?
+  dose             Float?
+  serial_number    String?
+  vaccination_date DateTime? @db.Date
+  commentary       String?
+  created_at       DateTime
+  update_at        DateTime
+}
+
+// Publication model
+model Publication {
+  publication_id Int      @id @default(autoincrement())
+  full_title     String
+  short_title    String
+  text           String
+  is_active      Boolean
+  created_at     DateTime
+  updated_at     DateTime
+}
+
+// Notification model
+model Notification {
+  inotification_id Int                @id @default(autoincrement())
+  title            String?
+  text             String
+  is_delivered     Boolean
+  created_at       DateTime
+  UserNotification UserNotification[]
+}
+
+// UserNotification model
+model UserNotification {
+  user_notification_id Int          @id @default(autoincrement())
+  user                 User         @relation(fields: [user_id], references: [user_id])
+  user_id              Int
+  notification         Notification @relation(fields: [inotification_id], references: [inotification_id])
+  inotification_id     Int
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Role {
+  ADMIN
+  USER
+  VISITOR
+  MODERATOR
+}
+
+enum VaccineType {
+  CALENDAR
+  EPIDEMIOLOGY
+}
