@@ -15,13 +15,13 @@ datasource db {
 
 // User model
 model User {
-  user_id             Int                @id @default(autoincrement())
+  id                  Int                @id @default(autoincrement())
   lastname            String
   firstname           String
   midname             String?
-  dob                 DateTime @db.Date
+  dob                 DateTime
   age                 Int
-  hashed_password     String
+  hash              String
   salt                String
   email               String
   sex                 Sex
@@ -38,33 +38,32 @@ model User {
 }
 
 model Child {
-  child_id     Int            @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   lastname     String
   firstname    String
   midname      String?
-  dob          DateTime @db.Date
+  dob          DateTime
   age          Int
   sex          Sex
   is_active    Boolean
   created_at   DateTime
   updated_at   DateTime
-  user         User           @relation(fields: [user_id], references: [user_id])
+  user         User           @relation(fields: [user_id], references: [id])
   user_id      Int
   UserChild    UserChild[]
   ChildVaccine ChildVaccine[]
 }
 
 model UserChild {
-  user_child_id Int   @id @default(autoincrement())
-  user          User  @relation(fields: [user_id], references: [user_id])
-  user_id       Int
-  child         Child @relation(fields: [child_id], references: [child_id])
-  child_id      Int
+  id       Int   @id @default(autoincrement())
+  user     User  @relation(fields: [user_id], references: [id])
+  user_id  Int
+  child    Child @relation(fields: [child_id], references: [id])
+  child_id Int
 }
 
-// Vaccine model
 model Vaccine {
-  vaccine_id    Int            @id @default(autoincrement())
+  id            Int            @id @default(autoincrement())
   name          String
   type          VaccineType
   min_age       Int
@@ -76,51 +75,48 @@ model Vaccine {
   ChildVaccine  ChildVaccine[]
 }
 
-// UserVaccine model
 model UserVaccine {
-  user_vaccine_id  Int      @id @default(autoincrement())
-  vaccine          Vaccine  @relation(fields: [vaccine_id], references: [vaccine_id])
+  id               Int       @id @default(autoincrement())
+  vaccine          Vaccine   @relation(fields: [vaccine_id], references: [id])
   vaccine_id       Int
-  user             User     @relation(fields: [user_id], references: [user_id])
+  user             User      @relation(fields: [user_id], references: [id])
   user_id          Int
   medical_center   String?
   dose             Float?
   serial_number    String?
-  vaccination_date DateTime? @db.Date
+  vaccination_date DateTime?
   commentary       String?
   created_at       DateTime
   update_at        DateTime
 }
 
 model ChildVaccine {
-  child_vaccine_id Int      @id @default(autoincrement())
-  vaccine          Vaccine  @relation(fields: [vaccine_id], references: [vaccine_id])
+  id               Int       @id @default(autoincrement())
+  vaccine          Vaccine   @relation(fields: [vaccine_id], references: [id])
   vaccine_id       Int
-  child            Child    @relation(fields: [child_id], references: [child_id])
+  child            Child     @relation(fields: [child_id], references: [id])
   child_id         Int
   medical_center   String?
   dose             Float?
   serial_number    String?
-  vaccination_date DateTime? @db.Date
+  vaccination_date DateTime?
   commentary       String?
   created_at       DateTime
   update_at        DateTime
 }
 
-// Publication model
 model Publication {
-  publication_id Int      @id @default(autoincrement())
-  full_title     String
-  short_title    String
-  text           String
-  is_active      Boolean
-  created_at     DateTime
-  updated_at     DateTime
+  id          Int      @id @default(autoincrement())
+  full_title  String
+  short_title String
+  text        String
+  is_active   Boolean
+  created_at  DateTime
+  updated_at  DateTime
 }
 
-// Notification model
 model Notification {
-  inotification_id Int                @id @default(autoincrement())
+  id               Int                @id @default(autoincrement())
   title            String?
   text             String
   is_delivered     Boolean
@@ -128,13 +124,12 @@ model Notification {
   UserNotification UserNotification[]
 }
 
-// UserNotification model
 model UserNotification {
-  user_notification_id Int          @id @default(autoincrement())
-  user                 User         @relation(fields: [user_id], references: [user_id])
-  user_id              Int
-  notification         Notification @relation(fields: [inotification_id], references: [inotification_id])
-  inotification_id     Int
+  id              Int          @id @default(autoincrement())
+  user            User         @relation(fields: [user_id], references: [id])
+  user_id         Int
+  notification    Notification @relation(fields: [notification_id], references: [id])
+  notification_id Int
 }
 
 enum Sex {

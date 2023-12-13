@@ -24,7 +24,7 @@ export class UsersService {
   async activateUser(id: number) {
     return this.db.user.update({
       where: { id },
-      data: { isActivate: true },
+      data: { is_active: true },
     });
   }
   async create(signUpBodyDto: SignUpBodyDto, salt: string, hash: string) {
@@ -39,9 +39,12 @@ export class UsersService {
         dob: signUpBodyDto.dob,
         sex: signUpBodyDto.sex,
         age: await this.setAge(signUpBodyDto.dob),
-        isActivate: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        is_active: false,
+        role: 'USER',
+        created_at: new Date(),
+        is_confirmed_email: true,
+        notification_period: 7,
+        edited_at: new Date(),
       },
     });
     await this.activateUser(newUser.id);
@@ -55,7 +58,7 @@ export class UsersService {
   async deactivateUser(id: number) {
     return this.db.user.update({
       where: { id },
-      data: { isActivate: false },
+      data: { is_active: false },
     });
   }
 }
