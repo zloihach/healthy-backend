@@ -77,9 +77,9 @@ export class AuthController {
   }
 
   @Get('user-moderator')
-  @Roles(Role.User, Role.Moderator, Role.Admin) // Both users and moderators can access this handler
+  @Roles(Role.Moderator, Role.Admin) // Both users and moderators can access this handler
   @UseGuards(AuthGuard, RoleGuard) // Of course, admin can also access this endpoint as admin has higher privelege than both
   async userModeratorEndpoint() {
-    return 'Welcome user or moderator';
+    return 'Welcome admin or moderator';
   }
 }

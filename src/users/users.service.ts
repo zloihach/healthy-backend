@@ -55,10 +55,10 @@ export class UsersService {
     return this.db.user.findMany();
   }
 
-  async deactivateUser(id: number) {
+  async setUserStatus(id: number, status: boolean) {
     return this.db.user.update({
       where: { id },
-      data: { is_active: false },
+      data: { is_active: status },
     });
   }
 }

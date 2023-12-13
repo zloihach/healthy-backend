@@ -5,9 +5,9 @@ import { UsersController } from './users.controller';
 import { AccessControlService } from '../auth/shared/access-control.service';
 
 @Module({
-  imports: [DbModule, ],
+  imports: [DbModule],
   providers: [UsersService, AccessControlService],
   exports: [UsersService],
-  controllers: [UsersController, ],
+  controllers: [UsersController],
 })
 export class UsersModule {}

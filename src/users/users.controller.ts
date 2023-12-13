@@ -1,10 +1,10 @@
 import {
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -30,7 +30,7 @@ export class UsersController {
 
   @Get('getUserById/:id')
   @UseGuards(AuthGuard)
-  @Roles(Role.User)
+  @Roles(Role.Admin)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   getUserById(@Param('id') id: string) {
@@ -46,12 +46,39 @@ export class UsersController {
     return this.userService.findByEmail(email);
   }
 
-  @Delete('deactivateUserById/:id')
+  @Get('getAllUserChild')
+  @UseGuards(AuthGuard)
+  @Roles(Role.User)
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async getAllUserChild() {
+    return true;
+  }
+
+  @Get('getUserChildById/:id')
+  @UseGuards(AuthGuard)
+  @Roles(Role.User)
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  getUserChildById(@Param('id') id: string) {
+    return id;
+  }
+
+  @Patch('activateUser/:id')
+  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async activate(@Param('id') id: string) {
+    await this.userService.setUserStatus(Number(id), true);
+  }
+
+  @Patch('deactivateUser/:id')
   @UseGuards(AuthGuard)
   @Roles(Role.Admin)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   async deactivateUser(@Param('id') id: string) {
-    await this.userService.deactivateUser(Number(id));
+    await this.userService.setUserStatus(Number(id), false);
   }
 }
