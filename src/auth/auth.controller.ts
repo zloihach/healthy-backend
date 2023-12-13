@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CookieService } from './cookie/cookie.service';
+import { CookieService } from './shared/cookie.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { SignUpBodyDto } from './dto/signup';
 import { Response } from 'express';

@@ -7,7 +7,7 @@ import { UsersService } from '../users/users.service';
 import { PasswordService } from './password/password.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpBodyDto } from './dto/signup';
-import { CookieService } from './cookie/cookie.service';
+import { CookieService } from './shared/cookie.service';
 import { Response } from 'express';
 
 @Injectable()

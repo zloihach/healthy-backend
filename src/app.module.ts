@@ -5,11 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { DbModule } from './db/db.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
-import { ChildsService } from './users/childs/childs.service';
-import { ChildsModule } from './users/childs/childs.module';
+// import { ChildsModule } from './users/child/child.module';
 @Module({
-  imports: [AuthModule, DbModule, UsersModule, ChildsModule],
+  imports: [AuthModule, DbModule, UsersModule],
   controllers: [AppController],
-  providers: [AppService, UsersService, ChildsService],
+  providers: [AppService, UsersService],
 })
 export class AppModule {}

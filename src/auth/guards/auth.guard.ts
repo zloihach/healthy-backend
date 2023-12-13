@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import {CookieService} from "../cookie/cookie.service";
+import {CookieService} from "../shared/cookie.service";
 import {GetSessionInfoDto} from "../dto/sessioninfo";
 import {SessionInfo} from "../decorators/session-info.decorator";
 import {Role} from "@prisma/client";
