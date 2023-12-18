@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Role } from '../enums/role.enum';
 import { Reflector } from '@nestjs/core';
 import { AccessControlService } from '../shared/access-control.service';
@@ -9,11 +9,13 @@ import { GetSessionInfoDto } from '../dto/sessioninfo';
 @Injectable()
 export class RoleGuard implements CanActivate {
   constructor(
-      private reflector: Reflector,
-      private accessControlService: AccessControlService,
+    private reflector: Reflector,
+    private accessControlService: AccessControlService,
   ) {}
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
       context.getHandler(),
       context.getClass(),

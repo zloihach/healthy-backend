@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PasswordService } from './password/password.service';
-import { CookieService } from './cookie/cookie.service';
+import { CookieService } from './shared/cookie.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import * as process from 'process';
