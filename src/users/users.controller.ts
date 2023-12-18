@@ -33,7 +33,7 @@ export class UsersController {
   @Roles(Role.Admin)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  getUserById(@Param('id') id: string) {
+  async getUserById(@Param('id') id: string) {
     return this.userService.getUserById(Number(id));
   }
 
@@ -42,7 +42,7 @@ export class UsersController {
   @Roles(Role.Admin)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  getUserByEmail(@Param('email') email: string) {
+  async getUserByEmail(@Param('email') email: string) {
     return this.userService.findByEmail(email);
   }
 
@@ -60,7 +60,7 @@ export class UsersController {
   @Roles(Role.User)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  getUserChildById(@Param('id') id: string) {
+  async getUserChildById(@Param('id') id: string) {
     return id;
   }
 

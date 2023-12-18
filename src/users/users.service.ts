@@ -6,13 +6,13 @@ import { SignUpBodyDto } from '../auth/dto/signup';
 export class UsersService {
   constructor(private db: DbService) {}
 
-  findByEmail(email: string) {
+  async findByEmail(email: string) {
     return this.db.user.findFirst({ where: { email } });
   }
-  getUserById(id: number) {
+  async getUserById(id: number) {
     return this.db.user.findFirst({ where: { id } });
   }
-  async setAge(dob: Date) {
+  setAge(dob: Date) {
     const today = new Date();
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -38,7 +38,7 @@ export class UsersService {
         midname: signUpBodyDto.midname,
         dob: signUpBodyDto.dob,
         sex: signUpBodyDto.sex,
-        age: await this.setAge(signUpBodyDto.dob),
+        age: this.setAge(signUpBodyDto.dob),
         is_active: false,
         role: 'USER',
         created_at: new Date(),
