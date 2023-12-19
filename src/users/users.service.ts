@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from '../db/db.service';
 import { SignUpBodyDto } from '../auth/dto/signup';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -12,14 +13,6 @@ export class UsersService {
   async getUserById(id: number) {
     return this.db.user.findFirst({ where: { id } });
   }
-  setAge(dob: Date) {
-    const today = new Date();
-    const birthDate = new Date(dob);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-    return age;
-  }
 
   async activateUser(id: number) {
     return this.db.user.update({
@@ -27,7 +20,11 @@ export class UsersService {
       data: { is_active: true },
     });
   }
-  async create(signUpBodyDto: SignUpBodyDto, salt: string, hash: string) {
+  async create(
+    signUpBodyDto: SignUpBodyDto,
+    salt: string,
+    hash: string,
+  ): Promise<User> {
     const newUser = await this.db.user.create({
       data: {
         email: signUpBodyDto.email,
@@ -60,5 +57,16 @@ export class UsersService {
       where: { id },
       data: { is_active: status },
     });
+  }
+
+  // async updateUser(updateUserDto: UpdateUserDto) {}
+
+  setAge(dob: Date) {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    return age;
   }
 }

@@ -5,6 +5,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { VaccineType } from '@prisma/client';
 
 export class EditVaccineDto {
+  @ApiProperty({})
+  @IsNotEmpty()
+  @IsInt()
+  id: number;
+
   @ApiProperty({ required: false, example: 'COVID-19 Vaccine' })
   @IsOptional()
   @IsString()
