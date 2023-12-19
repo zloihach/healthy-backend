@@ -25,6 +25,7 @@ model User {
   salt                String
   email               String
   sex                 Sex
+  refreshToken        String?
   role                Role
   is_active           Boolean
   is_confirmed_email  Boolean
