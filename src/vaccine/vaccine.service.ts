@@ -3,15 +3,11 @@ import { DbService } from '../db/db.service';
 import { CreateVaccineDto } from './dto/createVaccine';
 import { EditVaccineDto } from './dto/editVaccine';
 import { Vaccine } from '@prisma/client';
-import { UsersService } from '../users/users.service';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
 
 @Injectable()
 export class VaccineService {
-  constructor(
-    private readonly db: DbService,
-    private readonly userService: UsersService,
-  ) {}
+  constructor(private readonly db: DbService) {}
 
   async getAllVaccine(): Promise<Vaccine[]> {
     return this.db.vaccine.findMany();
@@ -59,12 +55,10 @@ export class VaccineService {
       },
     });
   }
-
-  //:TODO сделать независмым от регистра, и сделать поиск по типу как один из параметров
-
   async searchVaccine(searchVaccineDto: SearchVaccineDto): Promise<Vaccine[]> {
     try {
       const { keyword } = searchVaccineDto;
+      const { type } = searchVaccineDto;
 
       if (!keyword || keyword.trim() === '') {
         return [];
@@ -72,13 +66,22 @@ export class VaccineService {
 
       const lowerKeyword = keyword.toLowerCase();
 
+      let whereCondition: any = {
+        OR: [
+          { name: { contains: lowerKeyword } },
+          { description: { contains: lowerKeyword } },
+        ],
+      };
+
+      if (type) {
+        whereCondition = {
+          ...whereCondition,
+          type: type,
+        };
+      }
+
       return this.db.vaccine.findMany({
-        where: {
-          OR: [
-            { name: { contains: lowerKeyword } },
-            { description: { contains: lowerKeyword } },
-          ],
-        },
+        where: whereCondition,
       });
     } catch (error) {
       console.error('Error searching for vaccines:', error);
