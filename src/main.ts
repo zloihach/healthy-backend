@@ -16,6 +16,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(3010);
 }
 bootstrap().then(() => console.log('Server is running'));
