@@ -32,13 +32,15 @@ export class VaccineService {
   }
 
   async createVaccine(createVaccineDto: CreateVaccineDto): Promise<Vaccine> {
+    const { name, description, type, min_age, max_age } = createVaccineDto;
+
     return this.db.vaccine.create({
       data: {
-        name: createVaccineDto.name,
-        description: createVaccineDto.description,
-        type: createVaccineDto.type,
-        min_age: createVaccineDto.min_age,
-        max_age: createVaccineDto.max_age,
+        name,
+        description,
+        type,
+        min_age,
+        max_age,
         created_at: new Date(),
         edited_at: new Date(),
       },
@@ -52,11 +54,7 @@ export class VaccineService {
     return this.db.vaccine.update({
       where: { id },
       data: {
-        name: editVaccineDto.name,
-        description: editVaccineDto.description,
-        type: editVaccineDto.type,
-        min_age: editVaccineDto.min_age,
-        max_age: editVaccineDto.max_age,
+        ...editVaccineDto,
         edited_at: new Date(),
       },
     });
@@ -87,16 +85,7 @@ export class VaccineService {
   }
 
   async createVaccination(createVaccinationDto: CreateVaccinationDto) {
-    const {
-      userId,
-      vaccineId,
-      medicalCenter,
-      dose,
-      serialNumber,
-      vaccinationDate,
-      commentary,
-      isVaccinated,
-    } = createVaccinationDto;
+    const { userId, vaccineId, ...vaccinationData } = createVaccinationDto;
 
     const user = await this.userService.getUserById(userId);
     const vaccine = await this.getVaccineById(vaccineId);
@@ -109,24 +98,16 @@ export class VaccineService {
       throw new NotFoundException(`Vaccine with ID ${vaccineId} not found`);
     }
 
-    const formattedVaccinationDate = vaccinationDate
-      ? formatISO(new Date(vaccinationDate))
+    const formattedVaccinationDate = vaccinationData.vaccinationDate
+      ? formatISO(new Date(vaccinationData.vaccinationDate))
       : null;
 
     return this.db.userVaccine.create({
       data: {
-        user: {
-          connect: { id: user.id },
-        },
-        vaccine: {
-          connect: { id: vaccine.id },
-        },
-        medical_center: medicalCenter,
-        dose: dose,
-        serial_number: serialNumber,
+        user: { connect: { id: user.id } },
+        vaccine: { connect: { id: vaccine.id } },
+        ...vaccinationData,
         vaccination_date: formattedVaccinationDate,
-        commentary: commentary,
-        is_vaccinated: isVaccinated,
         created_at: new Date(),
         updated_at: new Date(),
       },
