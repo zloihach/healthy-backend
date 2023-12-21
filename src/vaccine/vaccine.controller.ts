@@ -87,7 +87,7 @@ export class VaccineController {
   @Roles(Role.User)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async vaccinateUser(@Param() createVaccinationDto: CreateVaccinationDto) {
+  async vaccinateUser(@Body() createVaccinationDto: CreateVaccinationDto) {
     return this.vaccineService.createVaccination(createVaccinationDto);
   }
 

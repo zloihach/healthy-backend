@@ -21,7 +21,7 @@ model User {
   midname             String?
   dob                 DateTime
   age                 Int
-  hash              String
+  hash                String
   salt                String
   email               String
   sex                 Sex
@@ -84,7 +84,7 @@ model UserVaccine {
   medical_center   String?
   dose             Float?
   serial_number    String?
-  vaccination_date DateTime?
+  vaccination_date DateTime? @db.Date
   commentary       String?
   is_vaccinated    Boolean?
   created_at       DateTime

@@ -127,21 +127,7 @@ export class VaccineService {
     });
   }
 
-  // async getUserVaccinations(userId: number): Promise<UserVaccine[]> {
-  //   //Выводи в ответ только те прививки, которые сделаны и так же название этих прививок,
-  //   const user = await this.userService.getUserById(userId);
-  //   if (!user) {
-  //     throw new NotFoundException(`User with ID ${userId} not found`);
-  //   }
-  //   return this.db.userVaccine.findMany({
-  //     where: {
-  //       user_id: user.id,
-  //     },
-  //     include: {
-  //       vaccine: true,
-  //     },
-  //   });
-  // }
+  // async createVaccinationList()
 
   async getUserVaccinations(userId: number): Promise<UserVaccine[]> {
     return this.db.userVaccine.findMany({

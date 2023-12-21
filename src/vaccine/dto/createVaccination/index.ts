@@ -7,6 +7,7 @@ import {
   IsDateString,
   IsBoolean,
   IsNotEmpty,
+  IsDate,
 } from 'class-validator';
 
 export class CreateVaccinationDto {
@@ -37,14 +38,10 @@ export class CreateVaccinationDto {
   @IsOptional()
   serialNumber?: string;
 
-  @ApiProperty({
-    type: 'string',
-    required: false,
-    example: '2023-01-01',
-  })
-  @IsDateString()
+  @ApiProperty({ type: 'string', required: false, example: '2023-01-01' })
+  @IsString()
   @IsOptional()
-  vaccinationDate?: string; // Измените тип на строку для примера
+  vaccinationDate?: Date;
 
   @ApiProperty({ type: 'string', required: false, example: 'Комментарий' })
   @IsString()
