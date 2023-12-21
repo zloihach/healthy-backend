@@ -84,11 +84,11 @@ model UserVaccine {
   medical_center   String?
   dose             Float?
   serial_number    String?
-  vaccination_date DateTime? @db.Date
+  vaccination_date DateTime? @db.Date()
   commentary       String?
   is_vaccinated    Boolean?
   created_at       DateTime
-  update_at        DateTime
+  updated_at        DateTime
 }
 
 model ChildVaccine {
@@ -104,7 +104,7 @@ model ChildVaccine {
   commentary       String?
   is_vaccinated    Boolean?
   created_at       DateTime
-  update_at        DateTime
+  updated_at        DateTime
 }
 
 model Publication {

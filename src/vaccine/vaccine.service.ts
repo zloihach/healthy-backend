@@ -6,6 +6,7 @@ import { UserVaccine, Vaccine } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
 import { CreateVaccinationDto } from './dto/createVaccination';
+import { formatISO } from 'date-fns';
 
 @Injectable()
 export class VaccineService {
@@ -99,6 +100,7 @@ export class VaccineService {
 
     const user = await this.userService.getUserById(userId);
     const vaccine = await this.getVaccineById(vaccineId);
+
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
@@ -106,6 +108,10 @@ export class VaccineService {
     if (!vaccine) {
       throw new NotFoundException(`Vaccine with ID ${vaccineId} not found`);
     }
+
+    const formattedVaccinationDate = vaccinationDate
+      ? formatISO(new Date(vaccinationDate))
+      : null;
 
     return this.db.userVaccine.create({
       data: {
@@ -118,22 +124,20 @@ export class VaccineService {
         medical_center: medicalCenter,
         dose: dose,
         serial_number: serialNumber,
-        vaccination_date: vaccinationDate,
+        vaccination_date: formattedVaccinationDate,
         commentary: commentary,
         is_vaccinated: isVaccinated,
         created_at: new Date(),
-        update_at: new Date(),
+        updated_at: new Date(),
       },
     });
   }
-
-  // async createVaccinationList()
 
   async getUserVaccinations(userId: number): Promise<UserVaccine[]> {
     return this.db.userVaccine.findMany({
       where: {
         user_id: userId,
-        is_vaccinated: true, // Фильтр для выбора только сделанных прививок
+        is_vaccinated: true,
       },
       include: {
         vaccine: {

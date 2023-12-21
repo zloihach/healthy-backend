@@ -14,11 +14,11 @@ INSERT INTO "Vaccine" (name, type, min_age, max_age, created_at, edited_at, desc
 VALUES ('Вакцина 1', 'CALENDAR', 0, 12, '2022-01-01', '2022-01-01', 'Описание вакцины 1');
 
 -- Данные для таблицы UserVaccine
-INSERT INTO "UserVaccine" (vaccine_id, user_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, update_at)
+INSERT INTO "UserVaccine" (vaccine_id, user_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, updated_at)
 VALUES (1, 1, 'Медицинский центр 1', 1.0, 'serial_1', '2022-01-15', 'Комментарий к вакцинации', '2022-01-15', '2022-01-15');
 
 -- Данные для таблицы ChildVaccine
-INSERT INTO "ChildVaccine" (vaccine_id, child_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, update_at)
+INSERT INTO "ChildVaccine" (vaccine_id, child_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, updated_at)
 VALUES (1, 1, 'Медицинский центр 1', 1.0, 'serial_1', '2022-01-15', 'Комментарий к вакцинации', '2022-01-15', '2022-01-15');
 
 -- Данные для таблицы Publication
@@ -82,14 +82,14 @@ VALUES
     ('Вакцина 5', 'EPIDEMIOLOGY', 36, 48, '2022-01-01', '2022-01-01', 'Описание вакцины 5');
 
 -- Данные для таблицы UserVaccine
-INSERT INTO "UserVaccine" (vaccine_id, user_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, update_at)
+INSERT INTO "UserVaccine" (vaccine_id, user_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, updated_at)
 VALUES
     (2, 1, 'Медицинский центр 2', 1.0, 'serial_2', '2022-01-20', 'Комментарий к вакцинации 2', '2022-01-20', '2022-01-20'),
     (3, 2, 'Медицинский центр 3', 1.0, 'serial_3', '2022-01-25', 'Комментарий к вакцинации 3', '2022-01-25', '2022-01-25'),
     (4, 3, 'Медицинский центр 4', 1.0, 'serial_4', '2022-01-30', 'Комментарий к вакцинации 4', '2022-01-30', '2022-01-30');
 
 -- Данные для таблицы ChildVaccine
-INSERT INTO "ChildVaccine" (vaccine_id, child_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, update_at)
+INSERT INTO "ChildVaccine" (vaccine_id, child_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, updated_at)
 VALUES
     (2, 1, 'Медицинский центр 2', 1.0, 'serial_2', '2022-01-20', 'Комментарий к вакцинации 2', '2022-01-20', '2022-01-20'),
     (3, 2, 'Медицинский центр 3', 1.0, 'serial_3', '2022-01-25', 'Комментарий к вакцинации 3', '2022-01-25', '2022-01-25'),

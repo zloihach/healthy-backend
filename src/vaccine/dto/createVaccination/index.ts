@@ -4,11 +4,12 @@ import {
   IsString,
   IsOptional,
   IsNumber,
-  IsDateString,
   IsBoolean,
   IsNotEmpty,
   IsDate,
+  IsDateString,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateVaccinationDto {
   @ApiProperty({ type: 'integer', example: 1 })
@@ -38,9 +39,9 @@ export class CreateVaccinationDto {
   @IsOptional()
   serialNumber?: string;
 
-  @ApiProperty({ type: 'string', required: false, example: '2023-01-01' })
-  @IsString()
-  @IsOptional()
+  @ApiProperty({ type: 'Date', required: true, example: '2023-01-01' })
+  @IsNotEmpty()
+  @Type(() => Date)
   vaccinationDate?: Date;
 
   @ApiProperty({ type: 'string', required: false, example: 'Комментарий' })
