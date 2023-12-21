@@ -18,9 +18,9 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { CreateVaccineDto } from './dto/createVaccine';
 import { EditVaccineDto } from './dto/editVaccine';
-// import { VaccinateUserDto } from './dto/vaccinateUser';
 import { Vaccine } from '@prisma/client';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
+import { CreateVaccinationDto } from './dto/createVaccination';
 
 @Controller('vaccine')
 @ApiTags('Vaccine')
@@ -73,5 +73,13 @@ export class VaccineController {
   @HttpCode(HttpStatus.OK)
   async searchVaccine(@Query() searchVaccineDto: SearchVaccineDto) {
     return this.vaccineService.searchVaccine(searchVaccineDto);
+  }
+
+  @Post('createVaccinationFor/:id')
+  @Roles(Role.User)
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async vaccinateUser(@Param() createVaccinationDto: CreateVaccinationDto) {
+    return this.vaccineService.createVaccination(createVaccinationDto);
   }
 }

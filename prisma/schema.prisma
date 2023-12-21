@@ -86,6 +86,7 @@ model UserVaccine {
   serial_number    String?
   vaccination_date DateTime?
   commentary       String?
+  is_vaccinated    Boolean?
   created_at       DateTime
   update_at        DateTime
 }
@@ -101,6 +102,7 @@ model ChildVaccine {
   serial_number    String?
   vaccination_date DateTime?
   commentary       String?
+  is_vaccinated    Boolean?
   created_at       DateTime
   update_at        DateTime
 }

@@ -5,6 +5,7 @@ import { EditVaccineDto } from './dto/editVaccine';
 import { Vaccine } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
+import { CreateVaccinationDto } from './dto/createVaccination';
 
 @Injectable()
 export class VaccineService {
@@ -60,8 +61,6 @@ export class VaccineService {
     });
   }
 
-  //:TODO сделать независмым от регистра, и сделать поиск по типу как один из параметров
-
   async searchVaccine(searchVaccineDto: SearchVaccineDto): Promise<Vaccine[]> {
     try {
       const { keyword } = searchVaccineDto;
@@ -84,5 +83,44 @@ export class VaccineService {
       console.error('Error searching for vaccines:', error);
       throw new Error('An error occurred while searching for vaccines.');
     }
+  }
+
+  async createVaccination(createVaccinationDto: CreateVaccinationDto) {
+    const {
+      userId,
+      vaccineId,
+      medicalCenter,
+      dose,
+      serialNumber,
+      vaccinationDate,
+      commentary,
+      isVaccinated,
+    } = createVaccinationDto;
+
+    const user = await this.userService.getUserById(userId);
+    const vaccine = await this.getVaccineById(vaccineId);
+    console.log(user, vaccine);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    if (!vaccine) {
+      throw new NotFoundException(`Vaccine with ID ${vaccineId} not found`);
+    }
+
+    return this.db.userVaccine.create({
+      data: {
+        user_id: userId,
+        vaccine_id: vaccineId,
+        medical_center: medicalCenter,
+        dose: dose,
+        serial_number: serialNumber,
+        vaccination_date: vaccinationDate,
+        commentary: commentary,
+        is_vaccinated: isVaccinated,
+        created_at: new Date(),
+        update_at: new Date(),
+      },
+    });
   }
 }
