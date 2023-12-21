@@ -129,4 +129,65 @@ export class VaccineService {
       },
     });
   }
+
+  async createVaccinationCalendar(id: number) {
+    return id;
+  }
+  async setVaccinationStatus(id: number, isVaccinated: boolean) {
+    return this.db.userVaccine.update({
+      where: { id },
+      data: {
+        is_vaccinated: isVaccinated,
+        updated_at: new Date(),
+      },
+    });
+  }
+  //Создай методо который заполнит автоматически таблицу UserVaccine на основании всех существующих прививок Для конкретного пользователя
+  async fillUserVaccineTable(userId: number): Promise<void> {
+    console.log('fillUserVaccineTable');
+    try {
+      const user = await this.userService.getUserById(userId);
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+
+      const vaccines = await this.getAllVaccine();
+      console.log('vaccines', vaccines);
+      for (const vaccine of vaccines) {
+        // Проверьте, не добавлена ли уже данная прививка пользователю
+        const existingUserVaccine = await this.db.userVaccine.findFirst({
+          where: {
+            user_id: user.id,
+            vaccine_id: vaccine.id,
+          },
+        });
+
+        if (!existingUserVaccine) {
+          // Создайте запись в таблице UserVaccine
+          await this.db.userVaccine.create({
+            data: {
+              user: {
+                connect: { id: user.id },
+              },
+              vaccine: {
+                connect: { id: vaccine.id },
+              },
+              // medical_center: '...',
+              // dose: '...',
+              // serial_number: '...',
+              // vaccination_date: '...',
+              // commentary: '...',
+              is_vaccinated: false,
+              created_at: new Date(),
+              updated_at: new Date(),
+            },
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error filling UserVaccine table:', error);
+      throw new Error('An error occurred while filling UserVaccine table.');
+    }
+  }
 }

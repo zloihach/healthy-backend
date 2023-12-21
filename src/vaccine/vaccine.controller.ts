@@ -10,10 +10,9 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { VaccineService } from './vaccine.service';
+import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { CreateVaccineDto } from './dto/createVaccine';
@@ -21,12 +20,14 @@ import { EditVaccineDto } from './dto/editVaccine';
 import { Vaccine } from '@prisma/client';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
 import { CreateVaccinationDto } from './dto/createVaccination';
+import { VaccineService } from './vaccine.service';
 
 @Controller('vaccine')
 @ApiTags('Vaccine')
 @UseGuards(AuthGuard, RoleGuard)
 export class VaccineController {
   constructor(private readonly vaccineService: VaccineService) {}
+
   @Get('getAllVaccine')
   @Roles(Role.User)
   @ApiOkResponse()
@@ -97,5 +98,21 @@ export class VaccineController {
   @HttpCode(HttpStatus.OK)
   async getUserVaccination(@Param('id') id: string) {
     return this.vaccineService.getUserVaccinations(Number(id));
+  }
+
+  @Post('createVaccinationCalendar/:id')
+  @Roles(Role.User)
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async createVaccinationCalendar(@Param('id') id: string) {
+    return this.vaccineService.createVaccinationCalendar(Number(id));
+  }
+
+  @Post('fillVaccination/:id')
+  @Roles(Role.User)
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async fillVaccination(@Param('id') id: string) {
+    return this.vaccineService.fillUserVaccineTable(Number(id));
   }
 }
