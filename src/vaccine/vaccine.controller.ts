@@ -70,6 +70,14 @@ export class VaccineController {
     description: 'Keyword for vaccine search',
     required: false,
   })
+  @ApiQuery({
+    name: 'vaccineType',
+    description: 'Type of vaccine',
+    required: false,
+    schema: {
+      default: 'CALENDAR',
+    },
+  })
   @HttpCode(HttpStatus.OK)
   async searchVaccine(@Query() searchVaccineDto: SearchVaccineDto) {
     return this.vaccineService.searchVaccine(searchVaccineDto);
