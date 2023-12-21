@@ -83,11 +83,19 @@ export class VaccineController {
     return this.vaccineService.searchVaccine(searchVaccineDto);
   }
 
-  @Post('createVaccinationFor/:id')
+  @Post('createVaccination')
   @Roles(Role.User)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   async vaccinateUser(@Param() createVaccinationDto: CreateVaccinationDto) {
     return this.vaccineService.createVaccination(createVaccinationDto);
+  }
+
+  @Get('getUserVaccination/:id')
+  @Roles(Role.User)
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async getUserVaccination(@Param('id') id: string) {
+    return this.vaccineService.getUserVaccinations(Number(id));
   }
 }

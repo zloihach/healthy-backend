@@ -18,7 +18,11 @@ export class CreateVaccinationDto {
   @IsInt()
   userId: number;
 
-  @ApiProperty({ type: 'string', required: false, example: 'Medical Center' })
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    example: 'Медицинский центр',
+  })
   @IsString()
   @IsOptional()
   medicalCenter?: string;
@@ -28,7 +32,7 @@ export class CreateVaccinationDto {
   @IsOptional()
   dose?: number;
 
-  @ApiProperty({ type: 'string', required: false, example: 'Serial Number' })
+  @ApiProperty({ type: 'string', required: false, example: 'Серийный номер' })
   @IsString()
   @IsOptional()
   serialNumber?: string;
@@ -40,9 +44,9 @@ export class CreateVaccinationDto {
   })
   @IsDateString()
   @IsOptional()
-  vaccinationDate?: Date;
+  vaccinationDate?: string; // Измените тип на строку для примера
 
-  @ApiProperty({ type: 'string', required: false, example: 'Comment' })
+  @ApiProperty({ type: 'string', required: false, example: 'Комментарий' })
   @IsString()
   @IsOptional()
   commentary?: string;

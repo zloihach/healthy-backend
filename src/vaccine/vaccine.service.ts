@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { DbService } from '../db/db.service';
 import { CreateVaccineDto } from './dto/createVaccine';
 import { EditVaccineDto } from './dto/editVaccine';
-import { Vaccine } from '@prisma/client';
+import { UserVaccine, Vaccine } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
 import { CreateVaccinationDto } from './dto/createVaccination';
@@ -99,7 +99,6 @@ export class VaccineService {
 
     const user = await this.userService.getUserById(userId);
     const vaccine = await this.getVaccineById(vaccineId);
-    console.log(user, vaccine);
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
@@ -110,8 +109,12 @@ export class VaccineService {
 
     return this.db.userVaccine.create({
       data: {
-        user_id: userId,
-        vaccine_id: vaccineId,
+        user: {
+          connect: { id: user.id },
+        },
+        vaccine: {
+          connect: { id: vaccine.id },
+        },
         medical_center: medicalCenter,
         dose: dose,
         serial_number: serialNumber,
@@ -120,6 +123,38 @@ export class VaccineService {
         is_vaccinated: isVaccinated,
         created_at: new Date(),
         update_at: new Date(),
+      },
+    });
+  }
+
+  // async getUserVaccinations(userId: number): Promise<UserVaccine[]> {
+  //   //Выводи в ответ только те прививки, которые сделаны и так же название этих прививок,
+  //   const user = await this.userService.getUserById(userId);
+  //   if (!user) {
+  //     throw new NotFoundException(`User with ID ${userId} not found`);
+  //   }
+  //   return this.db.userVaccine.findMany({
+  //     where: {
+  //       user_id: user.id,
+  //     },
+  //     include: {
+  //       vaccine: true,
+  //     },
+  //   });
+  // }
+
+  async getUserVaccinations(userId: number): Promise<UserVaccine[]> {
+    return this.db.userVaccine.findMany({
+      where: {
+        user_id: userId,
+        is_vaccinated: true, // Фильтр для выбора только сделанных прививок
+      },
+      include: {
+        vaccine: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
   }
