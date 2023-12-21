@@ -142,7 +142,6 @@ export class VaccineService {
       },
     });
   }
-  //Создай методо который заполнит автоматически таблицу UserVaccine на основании всех существующих прививок Для конкретного пользователя
   async fillUserVaccineTable(userId: number): Promise<void> {
     console.log('fillUserVaccineTable');
     try {
