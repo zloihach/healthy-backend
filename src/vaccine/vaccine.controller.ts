@@ -100,14 +100,6 @@ export class VaccineController {
     return this.vaccineService.getUserVaccinations(Number(id));
   }
 
-  @Post('createVaccinationCalendar/:id')
-  @Roles(Role.User)
-  @ApiOkResponse()
-  @HttpCode(HttpStatus.OK)
-  async createVaccinationCalendar(@Param('id') id: string) {
-    return this.vaccineService.createVaccinationCalendar(Number(id));
-  }
-
   @Post('fillVaccination/:id')
   @Roles(Role.User)
   @ApiOkResponse()
