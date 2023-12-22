@@ -8,6 +8,7 @@ import * as process from 'process';
 import { AuthController } from './auth.controller';
 import { SharedModule } from './shared/shared.module';
 import { AccessControlService } from './shared/access-control.service';
+import { VaccineService } from '../vaccine/vaccine.service';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AccessControlService } from './shared/access-control.service';
     PasswordService,
     CookieService,
     AccessControlService,
+    VaccineService,
   ],
 })
 export class AuthModule {}

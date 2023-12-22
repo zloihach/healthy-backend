@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { DbService } from '../db/db.service';
 import { SignUpBodyDto } from '../auth/dto/signup';
 import { User } from '@prisma/client';
+import { VaccineService } from '../vaccine/vaccine.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private db: DbService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly vaccineService: VaccineService,
+  ) {}
 
   async findByEmail(email: string) {
     return this.db.user.findFirst({ where: { email } });
@@ -45,6 +49,7 @@ export class UsersService {
       },
     });
     await this.activateUser(newUser.id);
+    await this.vaccineService.fillUserVaccineTable(newUser.id);
     return newUser;
   }
 

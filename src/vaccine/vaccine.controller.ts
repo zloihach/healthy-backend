@@ -40,8 +40,8 @@ export class VaccineController {
   @Roles(Role.User)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async getVaccineById(@Param('id') id: string) {
-    return this.vaccineService.getVaccineById(Number(id));
+  async getVaccineById(@Param('vaccineid') vaccineid: string) {
+    return this.vaccineService.getVaccineById(Number(vaccineid));
   }
 
   @Post('createVaccine')
@@ -52,15 +52,15 @@ export class VaccineController {
     return this.vaccineService.createVaccine(createVaccineDto);
   }
 
-  @Patch('updateVaccine/:id')
+  @Patch('updateVaccine/:vaccineid')
   @Roles(Role.Admin)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   async updateVaccine(
-    @Param('id') id: string,
+    @Param('vaccineid') vaccineid: string,
     @Body() editVaccineDto: EditVaccineDto,
   ): Promise<Vaccine> {
-    return this.vaccineService.updateVaccine(Number(id), editVaccineDto);
+    return this.vaccineService.updateVaccine(Number(vaccineid), editVaccineDto);
   }
 
   @Get('searchVaccine')
@@ -92,19 +92,19 @@ export class VaccineController {
     return this.vaccineService.createVaccination(createVaccinationDto);
   }
 
-  @Get('getUserVaccination/:id')
+  @Get('getUserVaccination/:vaccineid')
   @Roles(Role.User)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async getUserVaccination(@Param('id') id: string) {
-    return this.vaccineService.getUserVaccinations(Number(id));
+  async getUserVaccination(@Param('vaccineid') vaccineid: string) {
+    return this.vaccineService.getUserVaccinations(Number(vaccineid));
   }
 
-  @Post('fillVaccination/:id')
+  @Post('fillVaccinationTable/:userid')
   @Roles(Role.User)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async fillVaccination(@Param('id') id: string) {
-    return this.vaccineService.fillUserVaccineTable(Number(id));
+  async fillVaccination(@Param('userid') userid: string) {
+    return this.vaccineService.fillUserVaccineTable(Number(userid));
   }
 }

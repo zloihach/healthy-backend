@@ -143,7 +143,6 @@ export class VaccineService {
     });
   }
   async fillUserVaccineTable(userId: number): Promise<void> {
-    console.log('fillUserVaccineTable');
     try {
       const user = await this.userService.getUserById(userId);
 
@@ -152,9 +151,7 @@ export class VaccineService {
       }
 
       const vaccines = await this.getAllVaccine();
-      console.log('vaccines', vaccines);
       for (const vaccine of vaccines) {
-        // Проверьте, не добавлена ли уже данная прививка пользователю
         const existingUserVaccine = await this.db.userVaccine.findFirst({
           where: {
             user_id: user.id,
@@ -163,7 +160,6 @@ export class VaccineService {
         });
 
         if (!existingUserVaccine) {
-          // Создайте запись в таблице UserVaccine
           await this.db.userVaccine.create({
             data: {
               user: {
@@ -172,11 +168,6 @@ export class VaccineService {
               vaccine: {
                 connect: { id: vaccine.id },
               },
-              // medical_center: '...',
-              // dose: '...',
-              // serial_number: '...',
-              // vaccination_date: '...',
-              // commentary: '...',
               is_vaccinated: false,
               created_at: new Date(),
               updated_at: new Date(),
@@ -189,4 +180,6 @@ export class VaccineService {
       throw new Error('An error occurred while filling UserVaccine table.');
     }
   }
+
+  // async fillAutomaticlyVaccineTable(userId: number): Promise<void> {}
 }
