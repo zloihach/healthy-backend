@@ -3,11 +3,11 @@ import { VaccineService } from './vaccine.service';
 import { DbModule } from '../db/db.module';
 import { VaccineController } from './vaccine.controller';
 import { AccessControlService } from '../auth/shared/access-control.service';
-import { UsersModule } from '../users/users.module';
+import { UsersService } from '../users/users.service';
 
 @Module({
-  imports: [DbModule, UsersModule],
-  providers: [VaccineService, AccessControlService],
+  imports: [DbModule],
+  providers: [VaccineService, AccessControlService, UsersService],
   exports: [VaccineService],
   controllers: [VaccineController],
 })

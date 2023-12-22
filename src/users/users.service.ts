@@ -8,7 +8,7 @@ import { VaccineService } from '../vaccine/vaccine.service';
 export class UsersService {
   constructor(
     private readonly db: DbService,
-    private readonly vaccineService: VaccineService,
+    // private readonly vaccineService: VaccineService,
   ) {}
 
   async findByEmail(email: string) {
@@ -49,7 +49,7 @@ export class UsersService {
       },
     });
     await this.activateUser(newUser.id);
-    await this.vaccineService.fillUserVaccineTable(newUser.id);
+    // await this.vaccineService.fillUserVaccineTable(newUser.id);
     return newUser;
   }
 

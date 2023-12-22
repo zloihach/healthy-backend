@@ -142,7 +142,7 @@ export class VaccineService {
       },
     });
   }
-  async fillUserVaccineTable(userId: number): Promise<void> {
+  async fillUserVaccinationTable(userId: number): Promise<void> {
     try {
       const user = await this.userService.getUserById(userId);
 
