@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { DbModule } from './db/db.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
@@ -12,15 +11,22 @@ import { AccessControlService } from './auth/shared/access-control.service';
 import { VaccinationController } from './vaccination/vaccination.controller';
 import { VaccinationService } from './vaccination/vaccination.service';
 import { VaccinationModule } from './vaccination/vaccination.module';
+import { UsersController } from './users/users.controller';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
-    AuthModule,
     DbModule,
+    AuthModule,
     UsersModule,
     VaccineModule,
     VaccinationModule,
   ],
-  controllers: [AppController, VaccineController, VaccinationController],
+  controllers: [
+    AppController,
+    UsersController,
+    VaccineController,
+    VaccinationController,
+  ],
   providers: [
     AppService,
     UsersService,

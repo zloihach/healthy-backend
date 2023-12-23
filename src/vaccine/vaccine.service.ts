@@ -3,15 +3,11 @@ import { DbService } from '../db/db.service';
 import { CreateVaccineDto } from './dto/createVaccine';
 import { EditVaccineDto } from './dto/editVaccine';
 import { Vaccine } from '@prisma/client';
-import { UsersService } from '../users/users.service';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
 
 @Injectable()
 export class VaccineService {
-  constructor(
-    private readonly db: DbService,
-    private readonly userService: UsersService,
-  ) {}
+  constructor(private readonly db: DbService) {}
 
   async getAllVaccine(): Promise<Vaccine[]> {
     return this.db.vaccine.findMany();
