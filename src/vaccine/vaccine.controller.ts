@@ -19,7 +19,6 @@ import { CreateVaccineDto } from './dto/createVaccine';
 import { EditVaccineDto } from './dto/editVaccine';
 import { Vaccine } from '@prisma/client';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
-import { CreateVaccinationDto } from './dto/createVaccination';
 import { VaccineService } from './vaccine.service';
 
 @Controller('vaccine')
@@ -84,27 +83,27 @@ export class VaccineController {
     return this.vaccineService.searchVaccine(searchVaccineDto);
   }
 
-  @Post('createVaccination')
-  @Roles(Role.User)
-  @ApiOkResponse()
-  @HttpCode(HttpStatus.OK)
-  async createVaccination(@Body() createVaccinationDto: CreateVaccinationDto) {
-    return this.vaccineService.createVaccination(createVaccinationDto);
-  }
-
-  @Get('getUserVaccination/:userid')
-  @Roles(Role.User)
-  @ApiOkResponse()
-  @HttpCode(HttpStatus.OK)
-  async getUserVaccination(@Param('userid') userid: string) {
-    return this.vaccineService.getUserVaccinations(Number(userid));
-  }
-
-  @Post('fillVaccinationTable/:userid')
-  @Roles(Role.User)
-  @ApiOkResponse()
-  @HttpCode(HttpStatus.OK)
-  async fillVaccination(@Param('userid') userid: string) {
-    return this.vaccineService.fillUserVaccinationTable(Number(userid));
-  }
+  // @Post('createVaccination')
+  // @Roles(Role.User)
+  // @ApiOkResponse()
+  // @HttpCode(HttpStatus.OK)
+  // async createVaccination(@Body() createVaccinationDto: CreateVaccinationDto) {
+  //   return this.vaccineService.createVaccination(createVaccinationDto);
+  // }
+  //
+  // @Get('getUserVaccination/:userid')
+  // @Roles(Role.User)
+  // @ApiOkResponse()
+  // @HttpCode(HttpStatus.OK)
+  // async getUserVaccination(@Param('userid') userid: string) {
+  //   return this.vaccineService.getUserVaccinations(Number(userid));
+  // }
+  //
+  // @Post('fillVaccinationTable/:userid')
+  // @Roles(Role.User)
+  // @ApiOkResponse()
+  // @HttpCode(HttpStatus.OK)
+  // async fillVaccination(@Param('userid') userid: string) {
+  //   return this.vaccineService.fillUserVaccinationTable(Number(userid));
+  // }
 }

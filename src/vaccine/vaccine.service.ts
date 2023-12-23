@@ -2,11 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { DbService } from '../db/db.service';
 import { CreateVaccineDto } from './dto/createVaccine';
 import { EditVaccineDto } from './dto/editVaccine';
-import { UserVaccine, Vaccine } from '@prisma/client';
+import { Vaccine } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
-import { CreateVaccinationDto } from './dto/createVaccination';
-import { formatISO } from 'date-fns';
 
 @Injectable()
 export class VaccineService {
@@ -84,102 +82,100 @@ export class VaccineService {
     }
   }
 
-  async createVaccination(createVaccinationDto: CreateVaccinationDto) {
-    const { userId, vaccineId, ...vaccinationData } = createVaccinationDto;
-
-    const user = await this.userService.getUserById(userId);
-    const vaccine = await this.getVaccineById(vaccineId);
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
-    }
-
-    if (!vaccine) {
-      throw new NotFoundException(`Vaccine with ID ${vaccineId} not found`);
-    }
-
-    const formattedVaccinationDate = vaccinationData.vaccinationDate
-      ? formatISO(new Date(vaccinationData.vaccinationDate))
-      : null;
-
-    return this.db.userVaccine.create({
-      data: {
-        user: { connect: { id: user.id } },
-        vaccine: { connect: { id: vaccine.id } },
-        ...vaccinationData,
-        vaccination_date: formattedVaccinationDate,
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-    });
-  }
-
-  async getUserVaccinations(userId: number): Promise<UserVaccine[]> {
-    return this.db.userVaccine.findMany({
-      where: {
-        user_id: userId,
-        is_vaccinated: true,
-      },
-      include: {
-        vaccine: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-  }
-
-  async createVaccinationCalendar(id: number) {
-    return id;
-  }
-  async setVaccinationStatus(id: number, isVaccinated: boolean) {
-    return this.db.userVaccine.update({
-      where: { id },
-      data: {
-        is_vaccinated: isVaccinated,
-        updated_at: new Date(),
-      },
-    });
-  }
-  async fillUserVaccinationTable(userId: number): Promise<void> {
-    try {
-      const user = await this.userService.getUserById(userId);
-
-      if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
-      }
-
-      const vaccines = await this.getAllVaccine();
-      for (const vaccine of vaccines) {
-        const existingUserVaccine = await this.db.userVaccine.findFirst({
-          where: {
-            user_id: user.id,
-            vaccine_id: vaccine.id,
-          },
-        });
-
-        if (!existingUserVaccine) {
-          await this.db.userVaccine.create({
-            data: {
-              user: {
-                connect: { id: user.id },
-              },
-              vaccine: {
-                connect: { id: vaccine.id },
-              },
-              is_vaccinated: false,
-              created_at: new Date(),
-              updated_at: new Date(),
-            },
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Error filling UserVaccine table:', error);
-      throw new Error('An error occurred while filling UserVaccine table.');
-    }
-  }
-
-  // async fillAutomaticlyVaccineTable(userId: number): Promise<void> {}
+  // async createVaccination(createVaccinationDto: CreateVaccinationDto) {
+  //   const { userId, vaccineId, ...vaccinationData } = createVaccinationDto;
+  //
+  //   const user = await this.userService.getUserById(userId);
+  //   const vaccine = await this.getVaccineById(vaccineId);
+  //
+  //   if (!user) {
+  //     throw new NotFoundException(`User with ID ${userId} not found`);
+  //   }
+  //
+  //   if (!vaccine) {
+  //     throw new NotFoundException(`Vaccine with ID ${vaccineId} not found`);
+  //   }
+  //
+  //   const formattedVaccinationDate = vaccinationData.vaccinationDate
+  //     ? formatISO(new Date(vaccinationData.vaccinationDate))
+  //     : null;
+  //
+  //   return this.db.userVaccine.create({
+  //     data: {
+  //       user: { connect: { id: user.id } },
+  //       vaccine: { connect: { id: vaccine.id } },
+  //       ...vaccinationData,
+  //       vaccination_date: formattedVaccinationDate,
+  //       created_at: new Date(),
+  //       updated_at: new Date(),
+  //     },
+  //   });
+  // }
+  //
+  // async getUserVaccinations(userId: number): Promise<UserVaccine[]> {
+  //   return this.db.userVaccine.findMany({
+  //     where: {
+  //       user_id: userId,
+  //       is_vaccinated: true,
+  //     },
+  //     include: {
+  //       vaccine: {
+  //         select: {
+  //           name: true,
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
+  //
+  // async createVaccinationCalendar(id: number) {
+  //   return id;
+  // }
+  // async setVaccinationStatus(id: number, isVaccinated: boolean) {
+  //   return this.db.userVaccine.update({
+  //     where: { id },
+  //     data: {
+  //       is_vaccinated: isVaccinated,
+  //       updated_at: new Date(),
+  //     },
+  //   });
+  // }
+  // async fillUserVaccinationTable(userId: number): Promise<void> {
+  //   try {
+  //     const user = await this.userService.getUserById(userId);
+  //
+  //     if (!user) {
+  //       throw new NotFoundException(`User with ID ${userId} not found`);
+  //     }
+  //
+  //     const vaccines = await this.getAllVaccine();
+  //     for (const vaccine of vaccines) {
+  //       const existingUserVaccine = await this.db.userVaccine.findFirst({
+  //         where: {
+  //           user_id: user.id,
+  //           vaccine_id: vaccine.id,
+  //         },
+  //       });
+  //
+  //       if (!existingUserVaccine) {
+  //         await this.db.userVaccine.create({
+  //           data: {
+  //             user: {
+  //               connect: { id: user.id },
+  //             },
+  //             vaccine: {
+  //               connect: { id: vaccine.id },
+  //             },
+  //             is_vaccinated: false,
+  //             created_at: new Date(),
+  //             updated_at: new Date(),
+  //           },
+  //         });
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error filling UserVaccine table:', error);
+  //     throw new Error('An error occurred while filling UserVaccine table.');
+  //   }
+  // }
 }
