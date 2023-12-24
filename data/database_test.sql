@@ -1,9 +1,9 @@
-INSERT INTO "User" (lastname, firstname, midname, dob, age, hash, salt, email, sex, role, is_active, is_confirmed_email, notification_period, created_at, edited_at)
-VALUES ('Иванов', 'Иван', 'Иванович', '1980-01-01', 41, 'hashed_password_1', 'salt_1', 'ivanov@example.com', 'MALE', 'ADMIN', true, true, 7, '2022-01-01', '2022-01-01');
+INSERT INTO "User" (lastname, firstname, midname, dob, hash, salt, email, sex, role, is_active, is_confirmed_email, notification_period, created_at, edited_at)
+VALUES ('Иванов', 'Иван', 'Иванович', '1980-01-01', 'hashed_password_1', 'salt_1', 'ivanov@example.com', 'MALE', 'ADMIN', true, true, 7, '2022-01-01', '2022-01-01');
 
 -- Данные для таблицы Child
-INSERT INTO "Child" (lastname, firstname, midname, dob, age, sex, is_active, created_at, updated_at, user_id)
-VALUES ('Иванова', 'Мария', 'Ивановна', '2010-01-01', 12, 'FEMALE', true, '2022-01-01', '2022-01-01', 1);
+INSERT INTO "Child" (lastname, firstname, midname, dob, sex, is_active, created_at, updated_at, user_id)
+VALUES ('Иванова', 'Мария', 'Ивановна', '2010-01-01', 'FEMALE', true, '2022-01-01', '2022-01-01', 1);
 
 -- Данные для таблицы UserChild
 INSERT INTO "UserChild" (user_id, child_id)
@@ -54,32 +54,32 @@ VALUES ('Заголовок уведомления', 'Текст уведомл�
 INSERT INTO "UserNotification" (user_id, notification_id)
 VALUES (1, 1);
 
-INSERT INTO "User" (lastname, firstname, midname, dob, age, hash, salt, email, sex, role, is_active, is_confirmed_email, notification_period, created_at, edited_at)
+INSERT INTO "User" (lastname, firstname, midname, dob, hash, salt, email, sex, role, is_active, is_confirmed_email, notification_period, created_at, edited_at)
 VALUES
-    ('Петров', 'Петр', 'Петрович', '1985-03-15', 36, 'hashed_password_2', 'salt_2', 'petrov@example.com', 'MALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
-    ('Сидорова', 'Анна', 'Ивановна', '1990-05-20', 31, 'hashed_password_3', 'salt_3', 'sidorova@example.com', 'FEMALE', 'USER', false, false, 7, '2022-01-01', '2022-01-01'),
-    ('Козлов', 'Алексей', 'Сергеевич', '1982-12-10', 39, 'hashed_password_4', 'salt_4', 'kozlov@example.com', 'MALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
-    ('Иванова', 'Екатерина', 'Ивановна', '1988-08-25', 33, 'hashed_password_5', 'salt_5', 'ivanova@example.com', 'FEMALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
-    ('Смирнов', 'Дмитрий', 'Александрович', '1975-07-11', 46, 'hashed_password_6', 'salt_6', 'smirnov@example.com', 'MALE', 'ADMIN', true, true, 7, '2022-01-01', '2022-01-01'),
-    ('Козлова', 'Ольга', 'Петровна', '1970-09-30', 51, 'hashed_password_7', 'salt_7', 'kozlova@example.com', 'FEMALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
-    ('Иванов', 'Сергей', 'Иванович', '1995-02-18', 26, 'hashed_password_8', 'salt_8', 'ivanov2@example.com', 'MALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
-    ('Петрова', 'Наталья', 'Петровна', '1987-04-23', 34, 'hashed_password_9', 'salt_9', 'petrova@example.com', 'FEMALE', 'USER', false, false, 7, '2022-01-01', '2022-01-01'),
-    ('Сидоров', 'Александр', 'Петрович', '1999-06-28', 22, 'hashed_password_10', 'salt_10', 'sidorov@example.com', 'MALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
-    ('Смирнова', 'Елена', 'Ивановна', '2000-10-05', 21, 'hashed_password_11', 'salt_11', 'smirnova@example.com', 'FEMALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01');
+    ('Петров', 'Петр', 'Петрович', '1985-03-15',  'hashed_password_2', 'salt_2', 'petrov@example.com', 'MALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
+    ('Сидорова', 'Анна', 'Ивановна', '1990-05-20',  'hashed_password_3', 'salt_3', 'sidorova@example.com', 'FEMALE', 'USER', false, false, 7, '2022-01-01', '2022-01-01'),
+    ('Козлов', 'Алексей', 'Сергеевич', '1982-12-10',  'hashed_password_4', 'salt_4', 'kozlov@example.com', 'MALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
+    ('Иванова', 'Екатерина', 'Ивановна', '1988-08-25',  'hashed_password_5', 'salt_5', 'ivanova@example.com', 'FEMALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
+    ('Смирнов', 'Дмитрий', 'Александрович', '1975-07-11',  'hashed_password_6', 'salt_6', 'smirnov@example.com', 'MALE', 'ADMIN', true, true, 7, '2022-01-01', '2022-01-01'),
+    ('Козлова', 'Ольга', 'Петровна', '1970-09-30',  'hashed_password_7', 'salt_7', 'kozlova@example.com', 'FEMALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
+    ('Иванов', 'Сергей', 'Иванович', '1995-02-18',  'hashed_password_8', 'salt_8', 'ivanov2@example.com', 'MALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
+    ('Петрова', 'Наталья', 'Петровна', '1987-04-23',  'hashed_password_9', 'salt_9', 'petrova@example.com', 'FEMALE', 'USER', false, false, 7, '2022-01-01', '2022-01-01'),
+    ('Сидоров', 'Александр', 'Петрович', '1999-06-28',  'hashed_password_10', 'salt_10', 'sidorov@example.com', 'MALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01'),
+    ('Смирнова', 'Елена', 'Ивановна', '2000-10-05',  'hashed_password_11', 'salt_11', 'smirnova@example.com', 'FEMALE', 'USER', true, true, 7, '2022-01-01', '2022-01-01');
 
 -- Данные для таблицы Child
-INSERT INTO "Child" (lastname, firstname, midname, dob, age, sex, is_active, created_at, updated_at, user_id)
+INSERT INTO "Child" (lastname, firstname, midname, dob,  sex, is_active, created_at, updated_at, user_id)
 VALUES
-    ('Петрова', 'Маргарита', 'Петровна', '2010-12-01', 11, 'FEMALE', true, '2022-01-01', '2022-01-01', 2),
-    ('Петров', 'Михаил', 'Петрович', '2012-08-15', 9, 'MALE', true, '2022-01-01', '2022-01-01', 3),
-    ('Сидоров', 'Иван', 'Петрович', '2015-06-20', 6, 'MALE', true, '2022-01-01', '2022-01-01', 4),
-    ('Иванова', 'Анастасия', 'Ивановна', '2018-03-10', 3, 'FEMALE', true, '2022-01-01', '2022-01-01', 5),
-    ('Смирнов', 'Артем', 'Дмитриевич', '2020-05-11', 1, 'MALE', true, '2022-01-01', '2022-01-01', 6),
-    ('Козлова', 'Елизавета', 'Александровна', '2015-09-30', 6, 'FEMALE', true, '2022-01-01', '2022-01-01', 7),
-    ('Иванов', 'Максим', 'Сергеевич', '2019-02-18', 2, 'MALE', true, '2022-01-01', '2022-01-01', 8),
-    ('Петрова', 'Александра', 'Петровна', '2012-04-05', 9, 'FEMALE', true, '2022-01-01', '2022-01-01', 9),
-    ('Сидоров', 'Егор', 'Александрович', '2017-06-28', 4, 'MALE', true, '2022-01-01', '2022-01-01', 10),
-    ('Смирнова', 'Мария', 'Дмитриевна', '2019-10-05', 2, 'FEMALE', true, '2022-01-01', '2022-01-01', 11);
+    ('Петрова', 'Маргарита', 'Петровна', '2010-12-01',  'FEMALE', true, '2022-01-01', '2022-01-01', 2),
+    ('Петров', 'Михаил', 'Петрович', '2012-08-15',  'MALE', true, '2022-01-01', '2022-01-01', 3),
+    ('Сидоров', 'Иван', 'Петрович', '2015-06-20',  'MALE', true, '2022-01-01', '2022-01-01', 4),
+    ('Иванова', 'Анастасия', 'Ивановна', '2018-03-10',  'FEMALE', true, '2022-01-01', '2022-01-01', 5),
+    ('Смирнов', 'Артем', 'Дмитриевич', '2020-05-11',  'MALE', true, '2022-01-01', '2022-01-01', 6),
+    ('Козлова', 'Елизавета', 'Александровна', '2015-09-30',  'FEMALE', true, '2022-01-01', '2022-01-01', 7),
+    ('Иванов', 'Максим', 'Сергеевич', '2019-02-18',  'MALE', true, '2022-01-01', '2022-01-01', 8),
+    ('Петрова', 'Александра', 'Петровна', '2012-04-05', 'FEMALE', true, '2022-01-01', '2022-01-01', 9),
+    ('Сидоров', 'Егор', 'Александрович', '2017-06-28',  'MALE', true, '2022-01-01', '2022-01-01', 10),
+    ('Смирнова', 'Мария', 'Дмитриевна', '2019-10-05',  'FEMALE', true, '2022-01-01', '2022-01-01', 11);
 
 -- Данные для таблицы UserChild
 INSERT INTO "UserChild" (user_id, child_id)

@@ -40,7 +40,6 @@ export class UsersService {
         midname: signUpBodyDto.midname,
         dob: signUpBodyDto.dob,
         sex: signUpBodyDto.sex,
-        age: this.setAge(signUpBodyDto.dob),
         is_active: false,
         role: 'USER',
         created_at: new Date(),
@@ -66,13 +65,4 @@ export class UsersService {
   }
 
   // async updateUser(updateUserDto: UpdateUserDto) {}
-
-  setAge(dob: Date) {
-    const today = new Date();
-    const birthDate = new Date(dob);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-    return age;
-  }
 }

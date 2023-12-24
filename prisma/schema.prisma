@@ -20,7 +20,6 @@ model User {
   firstname           String
   midname             String?
   dob                 DateTime
-  age                 Int
   hash                String
   salt                String
   email               String
@@ -43,7 +42,6 @@ model Child {
   firstname    String
   midname      String?
   dob          DateTime
-  age          Int
   sex          Sex
   is_active    Boolean
   created_at   DateTime
