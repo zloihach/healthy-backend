@@ -100,14 +100,9 @@ export class UsersService implements UserServiceInterface {
   ): Promise<User> {
     const newUser = await this.db.user.create({
       data: {
-        email: signUpBodyDto.email,
+        ...signUpBodyDto,
         hash,
         salt,
-        firstname: signUpBodyDto.firstname,
-        lastname: signUpBodyDto.lastname,
-        midname: signUpBodyDto.midname,
-        dob: signUpBodyDto.dob,
-        sex: signUpBodyDto.sex,
         is_active: false,
         role: 'USER',
         created_at: new Date(),
