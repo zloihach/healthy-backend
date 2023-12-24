@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import { SignUpBodyDto } from '../../auth/dto/signup';
-export interface UserServiceInterface {
+export interface IUserService {
   activateUser(id: number): Promise<User>;
 
   create(SignUpBodyDto: SignUpBodyDto, hash, salt): Promise<User>;
