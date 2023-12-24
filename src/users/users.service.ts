@@ -4,27 +4,95 @@ import { SignUpBodyDto } from '../auth/dto/signup';
 import { User } from '@prisma/client';
 import { VaccinationService } from '../vaccination/vaccination.service';
 
+// @Injectable()
+// export class UsersService {
+//   constructor(
+//     private readonly db: DbService,
+//     @Inject(forwardRef(() => VaccinationService))
+//     private readonly vaccinationService: VaccinationService,
+//   ) {}
+//
+//   async findByEmail(email: string) {
+//     return this.db.user.findFirst({ where: { email } });
+//   }
+//   async getUserById(id: number) {
+//     return this.db.user.findFirst({ where: { id } });
+//   }
+//
+//   async activateUser(id: number) {
+//     return this.db.user.update({
+//       where: { id },
+//       data: { is_active: true },
+//     });
+//   }
+//   async create(
+//     signUpBodyDto: SignUpBodyDto,
+//     salt: string,
+//     hash: string,
+//   ): Promise<User> {
+//     const newUser = await this.db.user.create({
+//       data: {
+//         email: signUpBodyDto.email,
+//         hash,
+//         salt,
+//         firstname: signUpBodyDto.firstname,
+//         lastname: signUpBodyDto.lastname,
+//         midname: signUpBodyDto.midname,
+//         dob: signUpBodyDto.dob,
+//         sex: signUpBodyDto.sex,
+//         is_active: false,
+//         role: 'USER',
+//         created_at: new Date(),
+//         is_confirmed_email: true,
+//         notification_period: 7,
+//         edited_at: new Date(),
+//       },
+//     });
+//     await this.activateUser(newUser.id);
+//     await this.vaccinationService.fillUserVaccinationTable(newUser.id);
+//     return newUser;
+//   }
+//
+//   async getAllUsers() {
+//     return this.db.user.findMany();
+//   }
+//
+//   async setUserStatus(id: number, status: boolean) {
+//     return this.db.user.update({
+//       where: { id },
+//       data: { is_active: status },
+//     });
+//   }
+//
+//   // async updateUser(updateUserDto: UpdateUserDto) {}
+// }
+
+// user.service.ts
+import { UserServiceInterface } from './interfaces';
+
 @Injectable()
-export class UsersService {
+export class UsersService implements UserServiceInterface {
   constructor(
     private readonly db: DbService,
     @Inject(forwardRef(() => VaccinationService))
     private readonly vaccinationService: VaccinationService,
   ) {}
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<User | null> {
     return this.db.user.findFirst({ where: { email } });
   }
-  async getUserById(id: number) {
+
+  async getUserById(id: number): Promise<User | null> {
     return this.db.user.findFirst({ where: { id } });
   }
 
-  async activateUser(id: number) {
+  async activateUser(id: number): Promise<User> {
     return this.db.user.update({
       where: { id },
       data: { is_active: true },
     });
   }
+
   async create(
     signUpBodyDto: SignUpBodyDto,
     salt: string,
@@ -53,16 +121,21 @@ export class UsersService {
     return newUser;
   }
 
-  async getAllUsers() {
+  async getAllUsers(): Promise<User[]> {
     return this.db.user.findMany();
   }
 
-  async setUserStatus(id: number, status: boolean) {
+  async setUserStatus(id: number, status: boolean): Promise<User> {
     return this.db.user.update({
       where: { id },
       data: { is_active: status },
     });
   }
 
-  // async updateUser(updateUserDto: UpdateUserDto) {}
+  async updateUser(id: number, updateUserDto: any): Promise<User> {
+    return this.db.user.update({
+      where: { id },
+      data: { ...updateUserDto, edited_at: new Date() },
+    });
+  }
 }

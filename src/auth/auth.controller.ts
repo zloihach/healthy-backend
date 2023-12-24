@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -17,9 +16,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { SignInBodyDto } from './dto/signin';
 import { SessionInfo } from './decorators/session-info.decorator';
 import { GetSessionInfoDto } from './dto/sessioninfo';
-import { Roles } from './decorators/roles.decorator';
-import { Role } from './enums/role.enum';
-import { RoleGuard } from './guards/role.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -68,18 +64,5 @@ export class AuthController {
   })
   getSessionInfo(@SessionInfo() session: GetSessionInfoDto) {
     return session;
-  }
-  @Get('admin')
-  @Roles(Role.Admin) // attaching metadata
-  @UseGuards(AuthGuard, RoleGuard) // implementing the guards
-  async adminOnlyEndpoint() {
-    return 'Welcome admin';
-  }
-
-  @Get('user-moderator')
-  @Roles(Role.Moderator) // Both users and moderators can access this handler
-  @UseGuards(AuthGuard, RoleGuard) // Of course, admin can also access this endpoint as admin has higher privelege than both
-  async userModeratorEndpoint() {
-    return 'Welcome admin or moderator';
   }
 }
