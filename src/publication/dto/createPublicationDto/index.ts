@@ -51,4 +51,16 @@ export class CreatePublicationBodyDto {
   })
   @IsBoolean()
   is_active: boolean;
+
+  /**
+   * Ссылка на изображение публикации
+   * @type {string}
+   */
+  @ApiProperty({
+    example: 'https://your-cdn-url.com/path/to/image.jpg',
+    description: 'Ссылка на изображение публикации',
+  })
+  @IsString()
+  @IsNotEmpty()
+  image_url: string;
 }

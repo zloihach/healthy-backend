@@ -14,6 +14,8 @@ import { VaccinationModule } from './vaccination/vaccination.module';
 import { UsersController } from './users/users.controller';
 import { AuthModule } from './auth/auth.module';
 import { PublicationModule } from './publication/publication.module';
+import { FilesModule } from './files/files.module';
+import { FilesController } from './files/files.controller';
 @Module({
   imports: [
     DbModule,
@@ -22,12 +24,14 @@ import { PublicationModule } from './publication/publication.module';
     VaccineModule,
     VaccinationModule,
     PublicationModule,
+    FilesModule,
   ],
   controllers: [
     AppController,
     UsersController,
     VaccineController,
     VaccinationController,
+    FilesController,
   ],
   providers: [
     AppService,

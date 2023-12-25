@@ -1,4 +1,3 @@
-// publication/publication.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Publication } from '@prisma/client';
 import { CreatePublicationBodyDto } from './dto/createPublicationDto';
@@ -7,21 +6,28 @@ import { SetPublicationStatusBodyDto } from './dto/setPublicationStatusDto';
 import { IPublicationService } from './interface';
 import { DbService } from '../db/db.service';
 import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
+import { S3Service } from '../s3/s3.service';
+import { FilesService } from '../files/files.service';
 
 @Injectable()
 export class PublicationService implements IPublicationService {
-  constructor(private readonly db: DbService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly s3Service: S3Service,
+    private readonly filesService: FilesService,
+  ) {}
 
   async createPublication(
     createPublicationBodyDto: CreatePublicationBodyDto,
   ): Promise<Publication> {
-    const { full_title, short_title, text, is_active } =
+    const { full_title, short_title, text, image_url, is_active } =
       createPublicationBodyDto;
     return this.db.publication.create({
       data: {
         full_title,
         short_title,
         text,
+        image_url,
         is_active,
         created_at: new Date(),
         updated_at: new Date(),
@@ -93,8 +99,6 @@ export class PublicationService implements IPublicationService {
     searchPublicationDto: SearchPublicationBodyDto,
   ): Promise<Publication[]> {
     const { keyword, isActive } = searchPublicationDto;
-    // Implement search logic based on the provided criteria
-    // You may need to customize this based on your database schema and requirements
     const publications = await this.db.publication.findMany({
       where: {
         full_title: {

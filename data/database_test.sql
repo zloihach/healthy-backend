@@ -42,10 +42,6 @@ VALUES (1, 1, 'Медицинский центр 1', 1.0, 'serial_1', '2022-01-1
 INSERT INTO "ChildVaccine" (vaccine_id, child_id, medical_center, dose, serial_number, vaccination_date, commentary, created_at, updated_at)
 VALUES (1, 1, 'Медицинский центр 1', 1.0, 'serial_1', '2022-01-15', 'Комментарий к вакцинации', '2022-01-15', '2022-01-15');
 
--- Данные для таблицы Publication
-INSERT INTO "Publication" (full_title, short_title, text, is_active, created_at, updated_at)
-VALUES ('Полное название публикации', 'Краткое название', 'Текст публикации', true, '2022-01-01', '2022-01-01');
-
 -- Данные для таблицы Notification
 INSERT INTO "Notification" (title, text, is_delivered, created_at)
 VALUES ('Заголовок уведомления', 'Текст уведомления', false, '2022-01-01');
@@ -117,10 +113,11 @@ VALUES
     (4, 3, 'Медицинский центр 4', 1.0, 'serial_4', '2022-01-30', 'Комментарий к вакцинации 4', '2022-01-30', '2022-01-30');
 
 -- Данные для таблицы Publication
-INSERT INTO "Publication" (full_title, short_title, text, is_active, created_at, updated_at)
+-- Добавление данных с учетом нового поля image_url
+INSERT INTO "Publication" (full_title, short_title, text, is_active, created_at, updated_at, image_url)
 VALUES
-    ('Полное название публикации 2', 'Краткое название 2', 'Текст публикации 2', true, '2022-01-02', '2022-01-02'),
-    ('Полное название публикации 3', 'Краткое название 3', 'Текст публикации 3', true, '2022-01-03', '2022-01-03');
+    ('Полное название публикации 2', 'Краткое название 2', 'Текст публикации 2', true, '2022-01-02', '2022-01-02', 'https://your-cdn-url.com/path/to/image2.jpg'),
+    ('Полное название публикации 3', 'Краткое название 3', 'Текст публикации 3', true, '2022-01-03', '2022-01-03', 'https://your-cdn-url.com/path/to/image3.jpg');
 
 -- Данные для таблицы Notification
 INSERT INTO "Notification" (title, text, is_delivered, created_at)
