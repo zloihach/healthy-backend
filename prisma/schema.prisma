@@ -111,9 +111,11 @@ model Publication {
   short_title String
   text        String
   is_active   Boolean
+  image_url   String
   created_at  DateTime
   updated_at  DateTime
 }
+
 
 model Notification {
   id               Int                @id @default(autoincrement())
