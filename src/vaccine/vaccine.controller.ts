@@ -82,28 +82,4 @@ export class VaccineController {
   async searchVaccine(@Query() searchVaccineDto: SearchVaccineDto) {
     return this.vaccineService.searchVaccine(searchVaccineDto);
   }
-
-  // @Post('createVaccination')
-  // @Roles(Role.User)
-  // @ApiOkResponse()
-  // @HttpCode(HttpStatus.OK)
-  // async createVaccination(@Body() createVaccinationDto: CreateVaccinationDto) {
-  //   return this.vaccineService.createVaccination(createVaccinationDto);
-  // }
-  //
-  // @Get('getUserVaccination/:userid')
-  // @Roles(Role.User)
-  // @ApiOkResponse()
-  // @HttpCode(HttpStatus.OK)
-  // async getUserVaccination(@Param('userid') userid: string) {
-  //   return this.vaccineService.getUserVaccinations(Number(userid));
-  // }
-  //
-  // @Post('fillVaccinationTable/:userid')
-  // @Roles(Role.User)
-  // @ApiOkResponse()
-  // @HttpCode(HttpStatus.OK)
-  // async fillVaccination(@Param('userid') userid: string) {
-  //   return this.vaccineService.fillUserVaccinationTable(Number(userid));
-  // }
 }
