@@ -4,6 +4,70 @@ import { SignUpBodyDto } from '../auth/dto/signup';
 import { User } from '@prisma/client';
 import { VaccinationService } from '../vaccination/vaccination.service';
 
+// @Injectable()
+// export class UsersService {
+//   constructor(
+//     private readonly db: DbService,
+//     @Inject(forwardRef(() => VaccinationService))
+//     private readonly vaccinationService: VaccinationService,
+//   ) {}
+//
+//   async findByEmail(email: string) {
+//     return this.db.user.findFirst({ where: { email } });
+//   }
+//   async getUserById(id: number) {
+//     return this.db.user.findFirst({ where: { id } });
+//   }
+//
+//   async activateUser(id: number) {
+//     return this.db.user.update({
+//       where: { id },
+//       data: { is_active: true },
+//     });
+//   }
+//   async create(
+//     signUpBodyDto: SignUpBodyDto,
+//     salt: string,
+//     hash: string,
+//   ): Promise<User> {
+//     const newUser = await this.db.user.create({
+//       data: {
+//         email: signUpBodyDto.email,
+//         hash,
+//         salt,
+//         firstname: signUpBodyDto.firstname,
+//         lastname: signUpBodyDto.lastname,
+//         midname: signUpBodyDto.midname,
+//         dob: signUpBodyDto.dob,
+//         sex: signUpBodyDto.sex,
+//         is_active: false,
+//         role: 'USER',
+//         created_at: new Date(),
+//         is_confirmed_email: true,
+//         notification_period: 7,
+//         edited_at: new Date(),
+//       },
+//     });
+//     await this.activateUser(newUser.id);
+//     await this.vaccinationService.fillUserVaccinationTable(newUser.id);
+//     return newUser;
+//   }
+//
+//   async getAllUsers() {
+//     return this.db.user.findMany();
+//   }
+//
+//   async setUserStatus(id: number, status: boolean) {
+//     return this.db.user.update({
+//       where: { id },
+//       data: { is_active: status },
+//     });
+//   }
+//
+//   // async updateUser(updateUserDto: UpdateUserDto) {}
+// }
+
+// user.service.ts
 import { IUserService } from './interfaces';
 
 @Injectable()
@@ -36,9 +100,14 @@ export class UsersService implements IUserService {
   ): Promise<User> {
     const newUser = await this.db.user.create({
       data: {
-        ...signUpBodyDto,
+        email: signUpBodyDto.email,
         hash,
         salt,
+        firstname: signUpBodyDto.firstname,
+        lastname: signUpBodyDto.lastname,
+        midname: signUpBodyDto.midname,
+        dob: signUpBodyDto.dob,
+        sex: signUpBodyDto.sex,
         is_active: false,
         role: 'USER',
         created_at: new Date(),
@@ -49,6 +118,7 @@ export class UsersService implements IUserService {
     });
     await this.activateUser(newUser.id);
     await this.vaccinationService.fillUserVaccinationTable(newUser.id);
+    await this.vaccinationService.createVaccinationCalendar(newUser.id);
     return newUser;
   }
 
