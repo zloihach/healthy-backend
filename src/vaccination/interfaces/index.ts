@@ -1,6 +1,7 @@
 import { CreateVaccinationDto } from '../../vaccine/dto/createVaccination';
 import { UserVaccine } from '@prisma/client';
-import { UpdateVaccinationBodyDto } from '../dto';
+import { UpdateVaccinationBodyDto } from '../dto/updateVaccinationBody';
+import { SetVaccinationStatusBodyDto } from '../dto/setVaccinationStatus';
 
 export interface IVaccinationService {
   createVaccination(
@@ -8,9 +9,11 @@ export interface IVaccinationService {
   ): Promise<UserVaccine>;
   getUserVaccinations(userId: number): Promise<UserVaccine[]>;
   createVaccinationCalendar(id: number): Promise<number>;
-  setVaccinationStatus(id: number, isVaccinated: boolean): Promise<UserVaccine>;
   fillUserVaccinationTable(userId: number): Promise<void>;
   updateVaccination(
     updateVaccinationBodyDto: UpdateVaccinationBodyDto,
+  ): Promise<UserVaccine>;
+  changeVaccinationStatus(
+    setVaccinationStatusBodyDto: SetVaccinationStatusBodyDto,
   ): Promise<UserVaccine>;
 }

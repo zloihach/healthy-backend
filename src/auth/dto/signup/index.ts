@@ -8,48 +8,66 @@ import {
 } from 'class-validator';
 import { Sex } from '../../enums/sex.enum';
 
+/**
+ * DTO для регистрации нового пользователя
+ *
+ * @class
+ */
 export class SignUpBodyDto {
-  @ApiProperty({
-    example: 'johndoe@mail.com',
-  })
+  /**
+   * Адрес электронной почты пользователя
+   * @type {string}
+   */
+  @ApiProperty({ example: 'johndoe@mail.com' })
   @IsEmail()
   email: string;
 
-  @ApiProperty({
-    example: 'superStrongPassword',
-  })
+  /**
+   * Пароль пользователя
+   * @type {string}
+   */
+  @ApiProperty({ example: 'superStrongPassword' })
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({
-    example: 'John',
-  })
+  /**
+   * Имя пользователя
+   * @type {string}
+   */
+  @ApiProperty({ example: 'John' })
   @IsNotEmpty()
   firstname: string;
 
-  @ApiProperty({
-    example: 'Doe',
-  })
+  /**
+   * Фамилия пользователя
+   * @type {string}
+   */
+  @ApiProperty({ example: 'Doe' })
   @IsNotEmpty()
   lastname: string;
 
-  @ApiProperty({
-    example: 'Some Middle Name',
-    required: false,
-  })
+  /**
+   * Среднее имя пользователя (опционально)
+   * @type {string|undefined}
+   */
+  @ApiProperty({ example: 'Some Middle Name', required: false })
   @IsOptional()
   midname?: string;
 
-  @ApiProperty({
-    example: '2000-01-01T00:00:00.000Z',
-  })
+  /**
+   * Дата рождения пользователя
+   * @type {Date}
+   */
+  @ApiProperty({ example: '2000-01-01T00:00:00.000Z' })
   @IsDateString()
   @IsNotEmpty()
   dob: Date;
 
-  @ApiProperty({
-    example: Sex.MALE,
-  })
+  /**
+   * Пол пользователя (опционально)
+   * @type {Sex|undefined}
+   */
+  @ApiProperty({ example: Sex.MALE })
   @IsOptional()
   @IsEnum(Sex)
   sex: Sex;
