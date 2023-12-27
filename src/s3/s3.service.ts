@@ -1,77 +1,131 @@
-import { Injectable } from '@nestjs/common';
-import { S3 } from 'aws-sdk';
-import { ManagedUpload } from 'aws-sdk/lib/s3/managed_upload';
-import { Readable } from 'stream';
-import { S3FileDto } from './dto/fileDto';
+import {
+  Controller,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+  BadRequestException,
+  Get,
+  Param,
+} from '@nestjs/common';
+import { ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { S3Service } from '../../dist/s3/s3.service';
 
-@Injectable()
-export class S3Service {
-  private s3 = new S3();
-  private readonly bucketName = 'your-s3-bucket-name'; // <--- заменить
-  private readonly region = 'ru-1'; // <--- заменить
+@ApiTags('S3')
+@Controller('s3')
+export class S3Controller {
+  constructor(private readonly awsService: S3Service) {}
 
-  async createBucket(): Promise<void> {
-    const params: S3.Types.CreateBucketRequest = {
-      Bucket: this.bucketName,
-    };
-    await this.s3.createBucket(params).promise();
+  @Post('upload')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    try {
+      if (!file) {
+        throw new BadRequestException('No file uploaded');
+      }
+
+      // Use S3Service to upload the file to S3
+      const result = await this.awsService.uploadPublicFile(
+        file.buffer,
+        file.originalname,
+      );
+
+      console.log(result);
+
+      return { success: true, message: 'File uploaded successfully' };
+    } catch (error) {
+      // Handle errors when uploading a file to S3
+      console.error('Error uploading file to S3:', error);
+      throw new BadRequestException('Failed to upload file to S3');
+    }
   }
 
-  async uploadFile(fileStream: Readable, key: string): Promise<S3FileDto> {
-    const uploadParams: S3.Types.PutObjectRequest = {
-      Bucket: this.bucketName,
-      Key: key,
-      Body: fileStream,
-      ACL: 'public-read',
-    };
+  @Get('list')
+  async listObjects() {
+    try {
+      // Use S3Service to list objects in the S3 bucket
+      const objects = await this.awsService.listObjects();
 
-    const data: ManagedUpload.SendData = await this.s3
-      .upload(uploadParams)
-      .promise();
+      console.log(objects);
 
-    return {
-      key: key,
-      url: data.Location,
-    };
+      return { success: true, objects };
+    } catch (error) {
+      // Handle errors when listing objects in S3
+      console.error('Error listing objects in S3:', error);
+      throw new BadRequestException('Failed to list objects in S3');
+    }
   }
 
-  async listObjects(): Promise<S3.Types.ListObjectsOutput> {
-    const params: S3.Types.ListObjectsRequest = {
-      Bucket: this.bucketName,
-    };
-    return this.s3.listObjects(params).promise();
+  @Get('get/:key')
+  async getObject(@Param('key') key: string) {
+    try {
+      // Use S3Service to get an object from S3
+      const object = await this.awsService.getObject(key);
+
+      console.log(object);
+
+      return { success: true, object };
+    } catch (error) {
+      // Handle errors when getting an object from S3
+      console.error('Error getting object from S3:', error);
+      throw new BadRequestException('Failed to get object from S3');
+    }
   }
 
-  async getObject(key: string): Promise<Buffer> {
-    const params: S3.Types.GetObjectRequest = {
-      Bucket: this.bucketName,
-      Key: key,
-    };
-    const data = await this.s3.getObject(params).promise();
-    return data.Body as Buffer;
+  @Get('copy/:sourceKey/:destinationKey')
+  async copyObject(
+    @Param('sourceKey') sourceKey: string,
+    @Param('destinationKey') destinationKey: string,
+  ) {
+    try {
+      // Use S3Service to copy an object in S3
+      await this.awsService.copyObject(sourceKey, destinationKey);
+
+      return { success: true, message: 'Object copied successfully' };
+    } catch (error) {
+      // Handle errors when copying an object in S3
+      console.error('Error copying object in S3:', error);
+      throw new BadRequestException('Failed to copy object in S3');
+    }
   }
 
-  async copyObject(sourceKey: string, destinationKey: string): Promise<void> {
-    const params: S3.Types.CopyObjectRequest = {
-      Bucket: this.bucketName,
-      CopySource: `${this.bucketName}/${sourceKey}`,
-      Key: destinationKey,
-    };
-    await this.s3.copyObject(params).promise();
+  @Get('delete/:key')
+  async deleteObject(@Param('key') key: string) {
+    try {
+      // Use S3Service to delete an object from S3
+      await this.awsService.deleteObject(key);
+
+      return { success: true, message: 'Object deleted successfully' };
+    } catch (error) {
+      // Handle errors when deleting an object from S3
+      console.error('Error deleting object from S3:', error);
+      throw new BadRequestException('Failed to delete object from S3');
+    }
   }
 
-  async deleteObject(key: string): Promise<void> {
-    const params: S3.Types.DeleteObjectRequest = {
-      Bucket: this.bucketName,
-      Key: key,
-    };
-    await this.s3.deleteObject(params).promise();
-  }
+  @Get('delete-bucket')
+  async deleteBucket() {
+    try {
+      // Use S3Service to delete the S3 bucket
+      await this.awsService.deleteBucket();
 
-  async deleteBucket(): Promise<void> {
-    const params: S3.Types.DeleteBucketRequest = {
-      Bucket: this.bucketName,
-    };
-    await this.s3.deleteBucket(params).promise();
+      return { success: true, message: 'Bucket deleted successfully' };
+    } catch (error) {
+      // Handle errors when deleting the S3 bucket
+      console.error('Error deleting bucket in S3:', error);
+      throw new BadRequestException('Failed to delete bucket in S3');
+    }
   }
 }

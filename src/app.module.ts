@@ -16,6 +16,8 @@ import { AuthModule } from './auth/auth.module';
 import { PublicationModule } from './publication/publication.module';
 import { FilesModule } from './files/files.module';
 import { FilesController } from './files/files.controller';
+import { ConfigModule } from '@nestjs/config';
+import { S3Module } from './s3/s3.module';
 @Module({
   imports: [
     DbModule,
@@ -25,6 +27,8 @@ import { FilesController } from './files/files.controller';
     VaccinationModule,
     PublicationModule,
     FilesModule,
+    ConfigModule,
+    S3Module,
   ],
   controllers: [
     AppController,
