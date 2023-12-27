@@ -6,14 +6,19 @@ import { IS3Service } from './interface';
 @Injectable()
 export class S3Service implements IS3Service {
   private readonly s3: S3;
-  private readonly bucketName: string;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private readonly accessKeyId: string,
+    private readonly secretAccessKey: string,
+    private readonly endpoint: string,
+    private readonly bucketName: string,
+  ) {
     this.bucketName = this.configService.get('S3_BUCKET_NAME').toString();
     this.s3 = new S3({
-      accessKeyId: this.configService.get('S3_ACCESS_ID'),
-      secretAccessKey: this.configService.get('S3_SECRET_KEY'),
-      endpoint: this.configService.get('S3_ENDPOINT'),
+      accessKeyId: this.accessKeyId,
+      secretAccessKey: this.secretAccessKey,
+      endpoint: this.endpoint,
     });
   }
 
