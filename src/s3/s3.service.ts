@@ -16,41 +16,11 @@ export class S3Service implements IS3Service {
       endpoint: this.configService.get('S3_ENDPOINT'),
     });
   }
-  // private readonly s3: S3;
-  // private readonly bucketName: string;
-  //
-  // constructor(private readonly configService: ConfigService) {
-  //   this.bucketName = this.configService.get('S3_BUCKET_NAME').toString();
-  //   this.s3 = new S3({
-  //     accessKeyId: this.configService.get('S3_ACCESS_KEY_ID'),
-  //     secretAccessKey: this.configService.get('S3_SECRET_ACCESS_KEY'),
-  //     endpoint: this.configService.get('S3_ENDPOINT'),
-  //   });
-  // }
-
-  // private readonly s3: S3;
-  // private readonly bucketName: string;
-  //
-  // constructor(
-  //   private configService: ConfigService,
-  //   private readonly accessKeyId: string,
-  //   private readonly secretAccessKey: string,
-  //   private readonly endpoint: string,
-  // ) {
-  //   this.bucketName = this.configService.get('S3_BUCKET_NAME').toString();
-  //   this.s3 = new S3({
-  //     accessKeyId: this.accessKeyId,
-  //     secretAccessKey: this.secretAccessKey,
-  //     endpoint: this.endpoint,
-  //   });
-  // }
-
   async uploadPublicFile(
     dataBuffer: Buffer,
     filename: string,
   ): Promise<S3.ManagedUpload.SendData> {
     try {
-      console.log(this.s3.endpoint);
       return await this.s3
         .upload({
           Bucket: this.bucketName,
