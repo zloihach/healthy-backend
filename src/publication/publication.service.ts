@@ -7,6 +7,7 @@ import { IPublicationService } from './interface';
 import { DbService } from '../db/db.service';
 import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
 import { S3Service } from '../s3/s3.service';
+
 @Injectable()
 export class PublicationService implements IPublicationService {
   constructor(
@@ -17,24 +18,15 @@ export class PublicationService implements IPublicationService {
   async createPublication(
     createPublicationBodyDto: CreatePublicationBodyDto,
   ): Promise<Publication> {
-    const { full_title, short_title, text, is_active, image } =
-      createPublicationBodyDto;
-
-    let uploadedImage;
-    if (image) {
-      uploadedImage = await this.s3Service.uploadPublicFile(
-        image.buffer,
-        image.filename,
-      );
-    }
+    const { image, ...publicationData } = createPublicationBodyDto;
+    const imageUrl: string | null = image
+      ? await this.uploadImage(image)
+      : null;
 
     return this.db.publication.create({
       data: {
-        full_title,
-        short_title,
-        text,
-        image_url: uploadedImage ? uploadedImage.Location : null, // Используйте URL загруженного изображения или null
-        is_active,
+        ...publicationData,
+        image_url: imageUrl,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -44,21 +36,12 @@ export class PublicationService implements IPublicationService {
   async editPublication(
     editPublicationDto: EditPublicationBodyDto,
   ): Promise<Publication> {
-    const { id, full_title, short_title, text } = editPublicationDto;
-    const existingPublication = await this.db.publication.findUnique({
-      where: { id },
-    });
-
-    if (!existingPublication) {
-      throw new NotFoundException(`Publication with ID ${id} not found`);
-    }
-
+    const { id, ...publicationData } = editPublicationDto;
+    await this.findPublicationById(id);
     return this.db.publication.update({
       where: { id },
       data: {
-        full_title: full_title || existingPublication.full_title,
-        short_title: short_title || existingPublication.short_title,
-        text: text || existingPublication.text,
+        ...publicationData,
         updated_at: new Date(),
       },
     });
@@ -68,14 +51,7 @@ export class PublicationService implements IPublicationService {
     setPublicationStatusDto: SetPublicationStatusBodyDto,
   ): Promise<Publication> {
     const { id, is_active } = setPublicationStatusDto;
-    const existingPublication = await this.db.publication.findUnique({
-      where: { id },
-    });
-
-    if (!existingPublication) {
-      throw new NotFoundException(`Publication with ID ${id} not found`);
-    }
-
+    await this.findPublicationById(id);
     return this.db.publication.update({
       where: { id },
       data: {
@@ -90,6 +66,35 @@ export class PublicationService implements IPublicationService {
   }
 
   async getPublicationById(id: number): Promise<Publication> {
+    return this.findPublicationById(id);
+  }
+
+  async searchPublication(
+    searchPublicationDto: SearchPublicationBodyDto,
+  ): Promise<Publication[]> {
+    const { keyword, isActive } = searchPublicationDto;
+    return this.db.publication.findMany({
+      where: {
+        full_title: {
+          contains: keyword,
+        },
+        is_active: isActive,
+      },
+    });
+  }
+
+  private async uploadImage(image: {
+    buffer: Buffer;
+    originalname: string;
+  }): Promise<string> {
+    const uploadedImage = await this.s3Service.uploadPublicFile(
+      image.buffer,
+      image.originalname,
+    );
+    return uploadedImage.Location;
+  }
+
+  private async findPublicationById(id: number): Promise<Publication> {
     const publication = await this.db.publication.findUnique({
       where: { id },
     });
@@ -99,21 +104,5 @@ export class PublicationService implements IPublicationService {
     }
 
     return publication;
-  }
-
-  async searchPublication(
-    searchPublicationDto: SearchPublicationBodyDto,
-  ): Promise<Publication[]> {
-    const { keyword, isActive } = searchPublicationDto;
-    const publications = await this.db.publication.findMany({
-      where: {
-        full_title: {
-          contains: keyword,
-        },
-        is_active: isActive,
-      },
-    });
-
-    return publications;
   }
 }

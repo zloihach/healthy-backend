@@ -111,7 +111,7 @@ model Publication {
   short_title String
   text        String
   is_active   Boolean
-  image_url   String
+  image_url   String?
   created_at  DateTime
   updated_at  DateTime
 }
