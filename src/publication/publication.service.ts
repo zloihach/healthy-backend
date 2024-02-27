@@ -7,27 +7,33 @@ import { IPublicationService } from './interface';
 import { DbService } from '../db/db.service';
 import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
 import { S3Service } from '../s3/s3.service';
-import { FilesService } from '../files/files.service';
-
 @Injectable()
 export class PublicationService implements IPublicationService {
   constructor(
     private readonly db: DbService,
     private readonly s3Service: S3Service,
-    private readonly filesService: FilesService,
   ) {}
 
   async createPublication(
     createPublicationBodyDto: CreatePublicationBodyDto,
   ): Promise<Publication> {
-    const { full_title, short_title, text, image_url, is_active } =
+    const { full_title, short_title, text, is_active, image } =
       createPublicationBodyDto;
+
+    let uploadedImage;
+    if (image) {
+      uploadedImage = await this.s3Service.uploadPublicFile(
+        image.buffer,
+        image.filename,
+      );
+    }
+
     return this.db.publication.create({
       data: {
         full_title,
         short_title,
         text,
-        image_url,
+        image_url: uploadedImage ? uploadedImage.Location : null, // Используйте URL загруженного изображения или null
         is_active,
         created_at: new Date(),
         updated_at: new Date(),

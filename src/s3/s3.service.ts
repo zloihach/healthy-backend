@@ -16,6 +16,7 @@ export class S3Service implements IS3Service {
       endpoint: this.configService.get('S3_ENDPOINT'),
     });
   }
+
   async uploadPublicFile(
     dataBuffer: Buffer,
     filename: string,

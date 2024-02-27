@@ -8,9 +8,17 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -21,6 +29,7 @@ import { Publication } from '@prisma/client';
 import { SetPublicationStatusBodyDto } from './dto/setPublicationStatusDto';
 import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
 import { PublicationService } from './publication.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('publication')
 @ApiTags('Publication')
@@ -48,10 +57,18 @@ export class PublicationController {
   @Roles(Role.Admin)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Данные для создания публикации',
+    type: CreatePublicationBodyDto,
+  })
+  @UseInterceptors(FileInterceptor('image'))
   async createPublication(
     @Body() createPublicationDto: CreatePublicationBodyDto,
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    return this.publicationService.createPublication(createPublicationDto);
+    const publicationData = { ...createPublicationDto, image };
+    return this.publicationService.createPublication(publicationData);
   }
 
   @Patch('editPublication/:publicationId')

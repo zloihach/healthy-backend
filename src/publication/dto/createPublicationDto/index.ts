@@ -1,66 +1,48 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Express } from 'express';
+import { Transform } from 'class-transformer';
 
-/**
- * DTO для создания новой публикации
- *
- * @class
- */
 export class CreatePublicationBodyDto {
-  /**
-   * Полное название публикации
-   * @type {string}
-   */
   @ApiProperty({
     example: 'Full Title',
     description: 'Полное название публикации',
   })
   @IsString()
   @IsNotEmpty()
-  full_title: string;
+  readonly full_title: string;
 
-  /**
-   * Краткое название публикации
-   * @type {string}
-   */
   @ApiProperty({
     example: 'Short Title',
     description: 'Краткое название публикации',
   })
   @IsString()
   @IsNotEmpty()
-  short_title: string;
+  readonly short_title: string;
 
-  /**
-   * Текст публикации
-   * @type {string}
-   */
-  @ApiProperty({ example: 'Publication Text', description: 'Текст публикации' })
+  @ApiProperty({
+    example: 'Publication Text',
+    description: 'Текст публикации',
+  })
   @IsString()
   @IsNotEmpty()
-  text: string;
+  readonly text: string;
 
-  /**
-   * Статус активности публикации
-   * @type {boolean}
-   */
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     example: true,
     description: 'Статус активности публикации',
   })
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   @IsBoolean()
-  is_active: boolean;
+  readonly is_active: boolean;
 
-  /**
-   * Ссылка на изображение публикации
-   * @type {string}
-   */
   @ApiProperty({
-    example: 'https://your-cdn-url.com/path/to/image.jpg',
-    description: 'Ссылка на изображение публикации',
+    type: 'string',
+    format: 'binary',
+    description: 'Изображение публикации',
+    required: false,
   })
-  @IsString()
-  @IsNotEmpty()
-  image_url: string;
+  @IsOptional()
+  readonly image?: Express.Multer.File;
 }
