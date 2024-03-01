@@ -9,12 +9,12 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CookieService } from './shared/cookie.service';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { SignUpBodyDto } from './dto/signup';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthGuard } from './guards/auth.guard';
-import { SignInBodyDto } from './dto/signin';
 import { SessionInfo } from './decorators/session-info.decorator';
+import { SignInBodyDto } from './dto/signin';
+import { SignUpBodyDto } from './dto/signup';
 import { GetSessionInfoDto } from './dto/sessioninfo';
 
 @Controller('auth')
@@ -26,7 +26,8 @@ export class AuthController {
   ) {}
 
   @Post('sign-in')
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Sign in user' })
+  @ApiOkResponse({ description: 'User signed in successfully' })
   @HttpCode(HttpStatus.OK)
   async signIn(
     @Body() body: SignInBodyDto,
@@ -40,7 +41,8 @@ export class AuthController {
   }
 
   @Post('sign-up')
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Sign up user' })
+  @ApiOkResponse({ description: 'User signed up successfully' })
   async signUp(
     @Body() signUpDto: SignUpBodyDto,
     @Res({ passthrough: true }) res: Response,
@@ -50,7 +52,8 @@ export class AuthController {
   }
 
   @Post('sign-out')
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Sign out user' })
+  @ApiOkResponse({ description: 'User signed out successfully' })
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   async signOut(@Res({ passthrough: true }) res: Response) {
@@ -58,8 +61,10 @@ export class AuthController {
   }
 
   @Post('session')
+  @ApiOperation({ summary: 'Get session information' })
   @UseGuards(AuthGuard)
   @ApiOkResponse({
+    description: 'Session information fetched successfully',
     type: GetSessionInfoDto,
   })
   getSessionInfo(@SessionInfo() session: GetSessionInfoDto) {

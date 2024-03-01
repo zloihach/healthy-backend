@@ -16,6 +16,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOkResponse,
+  ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -23,13 +24,13 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
-import { CreatePublicationBodyDto } from './dto/createPublicationDto';
-import { EditPublicationBodyDto } from './dto/editPublicationDto';
 import { Publication } from '@prisma/client';
-import { SetPublicationStatusBodyDto } from './dto/setPublicationStatusDto';
-import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
 import { PublicationService } from './publication.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CreatePublicationBodyDto } from './dto/createPublicationDto';
+import { EditPublicationBodyDto } from './dto/editPublicationDto';
+import { SetPublicationStatusBodyDto } from './dto/setPublicationStatusDto';
+import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
 
 @Controller('publication')
 @ApiTags('Publication')
@@ -37,29 +38,32 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 
-  @Get('getAllPublications')
+  @Get('getAll')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Get all publications' })
+  @ApiOkResponse({ description: 'List of publications fetched successfully' })
   @HttpCode(HttpStatus.OK)
   async getAllPublications() {
     return this.publicationService.getAllPublications();
   }
 
-  @Get('getPublicationById/:publicationId')
+  @Get('getById/:publicationId')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Get publication by ID' })
+  @ApiOkResponse({ description: 'Publication fetched successfully' })
   @HttpCode(HttpStatus.OK)
   async getPublicationById(@Param('publicationId') publicationId: string) {
     return this.publicationService.getPublicationById(Number(publicationId));
   }
 
-  @Post('createPublication')
+  @Post('create')
   @Roles(Role.Admin)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Create a new publication' })
+  @ApiOkResponse({ description: 'Publication created successfully' })
   @HttpCode(HttpStatus.OK)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Данные для создания публикации',
+    description: 'Data for creating a publication',
     type: CreatePublicationBodyDto,
   })
   @UseInterceptors(FileInterceptor('image'))
@@ -71,21 +75,25 @@ export class PublicationController {
     return this.publicationService.createPublication(publicationData);
   }
 
-  @Patch('editPublication/:publicationId')
+  @Patch('edit/:publicationId')
   @Roles(Role.Admin)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Edit a publication' })
+  @ApiOkResponse({ description: 'Publication edited successfully' })
   @HttpCode(HttpStatus.OK)
   async editPublication(
+    @Param('publicationId') publicationId: string,
     @Body() editPublicationDto: EditPublicationBodyDto,
   ): Promise<Publication> {
     return this.publicationService.editPublication(editPublicationDto);
   }
 
-  @Patch('setPublicationStatus/:publicationId')
+  @Patch('setStatus/:publicationId')
   @Roles(Role.Admin)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Set publication status' })
+  @ApiOkResponse({ description: 'Publication status set successfully' })
   @HttpCode(HttpStatus.OK)
   async setPublicationStatus(
+    @Param('publicationId') publicationId: string,
     @Body() setPublicationStatusDto: SetPublicationStatusBodyDto,
   ): Promise<Publication> {
     return this.publicationService.setPublicationStatus(
@@ -93,9 +101,10 @@ export class PublicationController {
     );
   }
 
-  @Get('searchPublication')
+  @Get('search')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Search for publications' })
+  @ApiOkResponse({ description: 'Publications fetched successfully' })
   @ApiQuery({
     name: 'keyword',
     description: 'Keyword for publication search',

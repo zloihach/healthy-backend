@@ -10,16 +10,21 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
+import { Vaccine } from '@prisma/client';
+import { VaccineService } from './vaccine.service';
 import { CreateVaccineDto } from './dto/createVaccine';
 import { EditVaccineDto } from './dto/editVaccine';
-import { Vaccine } from '@prisma/client';
 import { SearchVaccineDto } from './dto/seacrhVaccine';
-import { VaccineService } from './vaccine.service';
 
 @Controller('vaccine')
 @ApiTags('Vaccine')
@@ -27,33 +32,37 @@ import { VaccineService } from './vaccine.service';
 export class VaccineController {
   constructor(private readonly vaccineService: VaccineService) {}
 
-  @Get('getAllVaccine')
+  @Get('getAll')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Get all vaccines' })
+  @ApiOkResponse({ description: 'List of vaccines fetched successfully' })
   @HttpCode(HttpStatus.OK)
   async getAllVaccine() {
     return this.vaccineService.getAllVaccine();
   }
 
-  @Get('getVaccineById/:vaccineid')
+  @Get('getById/:vaccineid')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Get vaccine by ID' })
+  @ApiOkResponse({ description: 'Vaccine fetched successfully' })
   @HttpCode(HttpStatus.OK)
   async getVaccineById(@Param('vaccineid') vaccineid: string) {
     return this.vaccineService.getVaccineById(Number(vaccineid));
   }
 
-  @Post('createVaccine')
+  @Post('create')
   @Roles(Role.Admin)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Create a new vaccine' })
+  @ApiOkResponse({ description: 'Vaccine created successfully' })
   @HttpCode(HttpStatus.OK)
   async createVaccine(@Body() createVaccineDto: CreateVaccineDto) {
     return this.vaccineService.createVaccine(createVaccineDto);
   }
 
-  @Patch('updateVaccine/:vaccineid')
+  @Patch('update/:vaccineid')
   @Roles(Role.Admin)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Update a vaccine' })
+  @ApiOkResponse({ description: 'Vaccine updated successfully' })
   @HttpCode(HttpStatus.OK)
   async updateVaccine(
     @Param('vaccineid') vaccineid: string,
@@ -62,9 +71,10 @@ export class VaccineController {
     return this.vaccineService.updateVaccine(Number(vaccineid), editVaccineDto);
   }
 
-  @Get('searchVaccine')
+  @Get('search')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Search for vaccines' })
+  @ApiOkResponse({ description: 'Vaccines fetched successfully' })
   @ApiQuery({
     name: 'keyword',
     description: 'Keyword for vaccine search',

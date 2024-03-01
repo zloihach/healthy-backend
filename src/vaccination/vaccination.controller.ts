@@ -8,13 +8,13 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { VaccinationService } from './vaccination.service';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
+import { UserVaccine } from '@prisma/client';
 import { CreateVaccinationDto } from '../vaccine/dto/createVaccination';
 import { UpdateVaccinationBodyDto } from './dto/updateVaccinationBody';
-import { UserVaccine } from '@prisma/client';
 import { SetVaccinationStatusBodyDto } from './dto/setVaccinationStatus';
 
 @Controller('vaccination')
@@ -22,25 +22,28 @@ import { SetVaccinationStatusBodyDto } from './dto/setVaccinationStatus';
 export class VaccinationController {
   constructor(private readonly vaccinationService: VaccinationService) {}
 
-  @Post('createVaccination')
+  @Post('create')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Create a new vaccination record' })
+  @ApiOkResponse({ description: 'Vaccination record created successfully' })
   @HttpCode(HttpStatus.OK)
   async createVaccination(@Body() createVaccinationDto: CreateVaccinationDto) {
     return this.vaccinationService.createVaccination(createVaccinationDto);
   }
 
-  @Get('getUserVaccination/:userid')
+  @Get('user/:userid')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Get vaccination records for a user' })
+  @ApiOkResponse({ description: 'Vaccination records fetched successfully' })
   @HttpCode(HttpStatus.OK)
   async getUserVaccination(@Param('userid') userid: string) {
     return this.vaccinationService.getUserVaccinations(Number(userid));
   }
 
-  @Patch('updateVaccination')
+  @Patch('update')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Update a vaccination record' })
+  @ApiOkResponse({ description: 'Vaccination record updated successfully' })
   @HttpCode(HttpStatus.OK)
   async updateVaccination(
     @Body() updateVaccinationBodyDto: UpdateVaccinationBodyDto,
@@ -48,9 +51,12 @@ export class VaccinationController {
     return this.vaccinationService.updateVaccination(updateVaccinationBodyDto);
   }
 
-  @Patch('changeVaccinationStatus')
+  @Patch('change-status')
   @Roles(Role.User)
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'Change status of a vaccination record' })
+  @ApiOkResponse({
+    description: 'Vaccination record status changed successfully',
+  })
   @HttpCode(HttpStatus.OK)
   async setVaccinationStatus(
     @Body() setVaccinationStatusBodyDto: SetVaccinationStatusBodyDto,
