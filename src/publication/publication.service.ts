@@ -6,13 +6,13 @@ import { SetPublicationStatusBodyDto } from './dto/setPublicationStatusDto';
 import { IPublicationService } from './interface';
 import { DbService } from '../db/db.service';
 import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
-import { S3Service } from '../s3/s3.service';
+import { FileService } from '../files/file.service';
 
 @Injectable()
 export class PublicationService implements IPublicationService {
   constructor(
     private readonly db: DbService,
-    private readonly s3Service: S3Service,
+    private readonly fileService: FileService, // Используем FileService вместо S3Service
   ) {}
 
   async createPublication(
@@ -87,11 +87,11 @@ export class PublicationService implements IPublicationService {
     buffer: Buffer;
     originalname: string;
   }): Promise<string> {
-    const uploadedImage = await this.s3Service.uploadPublicFile(
+    const uploadedImageUrl = await this.fileService.uploadFile(
       image.buffer,
       image.originalname,
     );
-    return uploadedImage.Location;
+    return uploadedImageUrl;
   }
 
   private async findPublicationById(id: number): Promise<Publication> {

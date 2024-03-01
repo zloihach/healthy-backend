@@ -119,4 +119,18 @@ export class S3Service implements IS3Service {
       throw error;
     }
   }
+
+  async deleteFile(fileKey: string): Promise<void> {
+    try {
+      await this.s3
+        .deleteObject({
+          Bucket: this.bucketName,
+          Key: fileKey,
+        })
+        .promise();
+    } catch (error) {
+      console.error('Error deleting file from S3:', error);
+      throw error;
+    }
+  }
 }

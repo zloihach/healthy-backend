@@ -14,8 +14,7 @@ import { VaccinationModule } from './vaccination/vaccination.module';
 import { UsersController } from './users/users.controller';
 import { AuthModule } from './auth/auth.module';
 import { PublicationModule } from './publication/publication.module';
-import { FilesModule } from './files/files.module';
-import { FilesController } from './files/files.controller';
+import { FileModule } from './files/file.module';
 import { ConfigModule } from '@nestjs/config';
 import { S3Module } from './s3/s3.module';
 @Module({
@@ -26,7 +25,7 @@ import { S3Module } from './s3/s3.module';
     VaccineModule,
     VaccinationModule,
     PublicationModule,
-    FilesModule,
+    FileModule,
     ConfigModule,
     S3Module,
   ],
@@ -35,7 +34,6 @@ import { S3Module } from './s3/s3.module';
     UsersController,
     VaccineController,
     VaccinationController,
-    FilesController,
   ],
   providers: [
     AppService,

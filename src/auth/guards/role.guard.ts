@@ -24,7 +24,6 @@ export class RoleGuard implements CanActivate {
     const sessionInfo: GetSessionInfoDto = request['session'];
 
     if (requiredRoles && sessionInfo && sessionInfo.role) {
-      // Проверка на существование requiredRoles
       for (const role of requiredRoles) {
         const result = this.accessControlService.isAuthorized({
           requiredRole: role,
