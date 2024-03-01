@@ -9,15 +9,6 @@ import { VaccineType } from '@prisma/client';
  */
 export class EditVaccineDto {
   /**
-   * Идентификатор вакцины
-   * @type {number}
-   */
-  @ApiProperty({})
-  @IsNotEmpty()
-  @IsInt()
-  id: number;
-
-  /**
    * Наименование вакцины
    * @type {string}
    */
