@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DbService } from '../db/db.service';
-import { CreateVaccineDto } from './dto/createVaccine';
-import { EditVaccineDto } from './dto/editVaccine';
 import { Vaccine } from '@prisma/client';
-import { SearchVaccineDto } from './dto/seacrhVaccine';
 import { IVaccineService } from './interface';
+import { EditVaccineDto } from './dto/editVaccine';
+import { CreateVaccineDto } from './dto/createVaccine';
+import { SearchVaccineDto } from './dto/seacrhVaccine';
 
 @Injectable()
 export class VaccineService implements IVaccineService {
@@ -16,7 +16,7 @@ export class VaccineService implements IVaccineService {
 
   async getVaccineById(id: number): Promise<Vaccine> {
     const vaccine = await this.db.vaccine.findFirst({
-      where: { id },
+      where: { id: id },
     });
 
     if (!vaccine) {
@@ -57,21 +57,26 @@ export class VaccineService implements IVaccineService {
 
   async searchVaccine(searchVaccineDto: SearchVaccineDto): Promise<Vaccine[]> {
     try {
-      const { keyword } = searchVaccineDto;
+      const { keyword, type } = searchVaccineDto;
 
-      if (!keyword || keyword.trim() === '') {
+      if ((!keyword || keyword.trim() === '') && !type) {
         return [];
       }
 
-      const lowerKeyword = keyword.toLowerCase();
+      const searchConditions: any = {};
+      if (keyword) {
+        const lowerKeyword = keyword.toLowerCase();
+        searchConditions.OR = [
+          { name: { contains: lowerKeyword } },
+          { description: { contains: lowerKeyword } },
+        ];
+      }
+      if (type) {
+        searchConditions.type = type;
+      }
 
       return this.db.vaccine.findMany({
-        where: {
-          OR: [
-            { name: { contains: lowerKeyword } },
-            { description: { contains: lowerKeyword } },
-          ],
-        },
+        where: searchConditions,
       });
     } catch (error) {
       console.error('Error searching for vaccines:', error);

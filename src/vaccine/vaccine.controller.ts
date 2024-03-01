@@ -32,7 +32,7 @@ import { SearchVaccineDto } from './dto/seacrhVaccine';
 export class VaccineController {
   constructor(private readonly vaccineService: VaccineService) {}
 
-  @Get('getAll')
+  @Get('')
   @Roles(Role.User)
   @ApiOperation({ summary: 'Get all vaccines' })
   @ApiOkResponse({ description: 'List of vaccines fetched successfully' })
@@ -41,13 +41,13 @@ export class VaccineController {
     return this.vaccineService.getAllVaccine();
   }
 
-  @Get('getById/:vaccineid')
+  @Get('/:id')
   @Roles(Role.User)
   @ApiOperation({ summary: 'Get vaccine by ID' })
   @ApiOkResponse({ description: 'Vaccine fetched successfully' })
   @HttpCode(HttpStatus.OK)
-  async getVaccineById(@Param('vaccineid') vaccineid: string) {
-    return this.vaccineService.getVaccineById(Number(vaccineid));
+  async getVaccineById(@Param('id') id: string) {
+    return this.vaccineService.getVaccineById(Number(id));
   }
 
   @Post('create')
@@ -59,16 +59,16 @@ export class VaccineController {
     return this.vaccineService.createVaccine(createVaccineDto);
   }
 
-  @Patch('update/:vaccineid')
+  @Patch('update/:id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Update a vaccine' })
   @ApiOkResponse({ description: 'Vaccine updated successfully' })
   @HttpCode(HttpStatus.OK)
   async updateVaccine(
-    @Param('vaccineid') vaccineid: string,
+    @Param('id') id: string,
     @Body() editVaccineDto: EditVaccineDto,
   ): Promise<Vaccine> {
-    return this.vaccineService.updateVaccine(Number(vaccineid), editVaccineDto);
+    return this.vaccineService.updateVaccine(Number(id), editVaccineDto);
   }
 
   @Get('search')
@@ -81,11 +81,11 @@ export class VaccineController {
     required: false,
   })
   @ApiQuery({
-    name: 'vaccineType',
+    name: 'type',
     description: 'Type of vaccine',
     required: false,
     schema: {
-      default: 'CALENDAR',
+      default: 'EPIDEMIOLOGY',
     },
   })
   @HttpCode(HttpStatus.OK)
