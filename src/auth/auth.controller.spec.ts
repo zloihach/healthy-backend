@@ -76,5 +76,4 @@ describe('AuthController', () => {
 
     expect(authService.signOut).toHaveBeenCalledWith(resMock);
   });
-
 });
