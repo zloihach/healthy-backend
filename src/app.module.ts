@@ -17,8 +17,6 @@ import { PublicationModule } from './publication/publication.module';
 import { FileModule } from './files/file.module';
 import { ConfigModule } from '@nestjs/config';
 import { S3Module } from './s3/s3.module';
-import { ChildsService } from './childs/childs.service';
-import { ChildsModule } from './childs/childs.module';
 @Module({
   imports: [
     DbModule,
@@ -30,7 +28,6 @@ import { ChildsModule } from './childs/childs.module';
     FileModule,
     ConfigModule,
     S3Module,
-    ChildsModule,
   ],
   controllers: [
     AppController,
@@ -44,7 +41,6 @@ import { ChildsModule } from './childs/childs.module';
     VaccineService,
     AccessControlService,
     VaccinationService,
-    ChildsService,
   ],
 })
 export class AppModule {}
