@@ -29,7 +29,7 @@ describe('S3Service', () => {
 
   describe('uploadPublicFile', () => {
     it('should upload file to S3', async () => {
-      const mockUploadResult = { Location: 'http://example.com/image.jpg' };
+      const mockUploadResult = { Location: 'https://example.com/image.jpg' };
       jest.spyOn(s3Service['s3'], 'upload').mockReturnValue({
         promise: jest.fn().mockResolvedValue(mockUploadResult),
       } as any);
@@ -70,7 +70,7 @@ describe('S3Service', () => {
 
   describe('listObjects', () => {
     it('should list objects in S3 bucket', async () => {
-      const mockListResult = {}; // Mocked list result
+      const mockListResult = {};
       jest.spyOn(s3Service['s3'], 'listObjectsV2').mockReturnValue({
         promise: jest.fn().mockResolvedValue(mockListResult),
       } as any);
