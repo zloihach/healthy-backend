@@ -12,8 +12,8 @@ datasource db {
 
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 // User model
+
 model User {
   id                  Int                @id @default(autoincrement())
   lastname            String
@@ -86,7 +86,7 @@ model UserVaccine {
   commentary       String?
   is_vaccinated    Boolean?
   created_at       DateTime
-  updated_at        DateTime
+  updated_at       DateTime
 }
 
 model ChildVaccine {
@@ -102,7 +102,7 @@ model ChildVaccine {
   commentary       String?
   is_vaccinated    Boolean?
   created_at       DateTime
-  updated_at        DateTime
+  updated_at       DateTime
 }
 
 model Publication {
@@ -115,7 +115,6 @@ model Publication {
   created_at  DateTime
   updated_at  DateTime
 }
-
 
 model Notification {
   id               Int                @id @default(autoincrement())
