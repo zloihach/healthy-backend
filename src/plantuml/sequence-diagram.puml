@@ -1,0 +1,28 @@
+@startuml
+actor Пользователь as user
+participant "Веб-приложение" as website
+participant "Сервер Healthy" as server
+participant "База данных" as db
+
+user -> website: Запрос страницы календаря прививок
+website -> server: getAllVaccine()
+server -> db: Запрос данных о всех вакцинах
+db -> server: Возврат данных о вакцинах
+server -> website: Возврат списка вакцин
+website -> user: Отображение списка вакцин
+
+user -> website: Выбор вакцины
+website -> server: getVaccineById(id)
+server -> db: Запрос данных о выбранной вакцине
+db -> server: Возврат данных о вакцине
+server -> website: Возврат данных о вакцине
+website -> user: Отображение информации о выбранной вакцине
+
+user -> website: Запись на вакцинацию
+website -> server: createVaccination(createVaccinationDto)
+server -> db: Создание записи о вакцинации
+db -> server: Подтверждение создания записи
+server -> website: Подтверждение успешной записи
+website -> user: Отображение подтверждения записи на вакцинацию
+
+@enduml
