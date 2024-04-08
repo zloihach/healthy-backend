@@ -18,11 +18,11 @@ db -> server: Возврат данных о вакцине
 server -> website: Возврат данных о вакцине
 website -> user: Отображение информации о выбранной вакцине
 
-user -> website: Запись на вакцинацию
+user -> website: Отметить факт вакцинации
 website -> server: createVaccination(createVaccinationDto)
-server -> db: Создание записи о вакцинации
-db -> server: Подтверждение создания записи
+server -> db: Создание записи о факте вакцинации
+db -> server: Подтверждение создания записи о факте вакцинации
 server -> website: Подтверждение успешной записи
-website -> user: Отображение подтверждения записи на вакцинацию
+website -> user: Отображение записи
 
 @enduml
