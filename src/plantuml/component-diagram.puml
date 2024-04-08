@@ -1,11 +1,11 @@
 @startuml
 skinparam linetype ortho
 
-package "Веб-сайт Healthy на Angular" {
+package "Веб-сайт Healthy: Angular" {
     [Веб-интерфейс]
 }
 
-package "Сервер Healthy" {
+package "Сервер Healthy: NestJS" {
     [Контроллеры]
     [Сервисы]
     [Сервис авторизации]
@@ -16,7 +16,7 @@ package "Сервер Healthy" {
     [Сервис для управления файлами]
 }
 
-package "Сервер базы данных" {
+package "Сервер базы данных: PostgreSQL" {
     [База данных]
 }
 
