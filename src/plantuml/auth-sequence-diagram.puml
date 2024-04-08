@@ -1,0 +1,33 @@
+@startuml
+actor Пользователь as user
+participant "Веб-приложение" as website
+participant "Сервер Healthy" as server
+participant "Сервис авторизации" as authService
+participant "База данных" as db
+
+user -> website: Вход в систему
+website -> server: signIn(email, password)
+server -> authService: signIn(email, password)
+authService -> db: Проверка учетных данных пользователя
+db -> authService: Возврат результата проверки
+authService -> server: Возврат токена доступа
+server -> website: Возврат токена доступа
+website -> user: Перенаправление на главную страницу
+
+user -> website: Запрос информации о сессии
+website -> server: getSessionInfo(sessionId)
+server -> authService: getSessionInfo(sessionId)
+authService -> db: Запрос данных сессии
+db -> authService: Возврат данных сессии
+authService -> server: Возврат информации о сессии
+server -> website: Возврат информации о сессии
+website -> user: Отображение информации о пользователе
+
+user -> website: Выход из системы
+website -> server: signOut()
+server -> authService: signOut()
+authService -> server: Удаление токена доступа
+server -> website: Подтверждение выхода из системы
+website -> user: Перенаправление на страницу входа
+
+@enduml
