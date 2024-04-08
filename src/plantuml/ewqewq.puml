@@ -69,10 +69,7 @@ class PublicationService {
    uploadImage(image: {buffer: Buffer; originalname: string}): Promise<string>
    findPublicationById(id: number): Promise<Publication>
 }
-class RoleGuard {
-   constructor(reflector: Reflector, accessControlService: AccessControlService): 
-   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable…
-}
+
 class S3Service {
    constructor(configService: ConfigService): 
    s3: S3
@@ -140,9 +137,7 @@ AuthService            -[#595959,dashed]->  UsersService
 FileService            -[#595959,dashed]->  S3Service
 PublicationController  -[#595959,dashed]->  PublicationService    
 PublicationService     -[#595959,dashed]->  FileService
-RoleGuard              -[#595959,dashed]->  AccessControlService  
-UsersController        -[#595959,dashed]->  RoleGuard
-UsersController        -[#595959,dashed]->  UsersService          
+UsersController        -[#595959,dashed]->  UsersService
 UsersService           -[#595959,dashed]->  VaccinationService
 VaccinationController  -[#595959,dashed]->  VaccinationService    
 VaccinationService     -[#595959,dashed]->  UsersService
