@@ -1,0 +1,120 @@
+@startuml
+
+!define Table(name,desc) class name << (T,orchid) >> {
+    .. desc ..
+}
+
+!define PrimaryKey(name) <u>name</u>
+!define ForeignKey(name) #name
+
+Table(User, "User") {
+    PrimaryKey(id)
+    lastname : text
+    firstname : text
+    midname : text
+    dob : timestamp
+    hash : text
+    salt : text
+    email : text
+    sex : Sex
+    role : Role
+    is_active : boolean
+    is_confirmed_email : boolean
+    notification_period : integer
+    created_at : timestamp
+    edited_at : timestamp
+}
+
+Table(Child, "Child") {
+    PrimaryKey(id)
+    lastname : text
+    firstname : text
+    midname : text
+    dob : timestamp
+    sex : Sex
+    is_active : boolean
+    created_at : timestamp
+    updated_at : timestamp
+    ForeignKey(user_id)
+}
+
+Table(UserChild, "UserChild") {
+    PrimaryKey(id)
+    ForeignKey(user_id)
+    ForeignKey(child_id)
+}
+
+Table(Vaccine, "Vaccine") {
+    PrimaryKey(id)
+    name : text
+    type : VaccineType
+    min_age : integer
+    max_age : integer
+    created_at : timestamp
+    edited_at : timestamp
+    description : text
+}
+
+Table(UserVaccine, "UserVaccine") {
+    PrimaryKey(id)
+    ForeignKey(vaccine_id)
+    ForeignKey(user_id)
+    medical_center : text
+    dose : double
+    serial_number : text
+    vaccination_date : date
+    commentary : text
+    is_vaccinated : boolean
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+Table(ChildVaccine, "ChildVaccine") {
+    PrimaryKey(id)
+    ForeignKey(vaccine_id)
+    ForeignKey(child_id)
+    medical_center : text
+    dose : double
+    serial_number : text
+    vaccination_date : timestamp
+    commentary : text
+    is_vaccinated : boolean
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+Table(Publication, "Publication") {
+    PrimaryKey(id)
+    full_title : text
+    short_title : text
+    text : text
+    is_active : boolean
+    image_url : text
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+Table(Notification, "Notification") {
+    PrimaryKey(id)
+    title : text
+    text : text
+    is_delivered : boolean
+    created_at : timestamp
+}
+
+Table(UserNotification, "UserNotification") {
+    PrimaryKey(id)
+    ForeignKey(user_id)
+    ForeignKey(notification_id)
+}
+
+User "1" -- "0..*" Child
+User "1" -- "0..*" UserVaccine
+User "1" -- "0..*" UserNotification
+Child "1" -- "0..*" UserChild
+Child "1" -- "0..*" ChildVaccine
+Vaccine "1" -- "0..*" UserVaccine
+Vaccine "1" -- "0..*" ChildVaccine
+Notification "1" -- "0..*" UserNotification
+
+@enduml
