@@ -1,0 +1,35 @@
+@startuml
+actor Пользователь as user
+participant "Веб-приложение" as website
+participant "API Контроллер" as apiController
+participant "Сервер" as server
+participant "База данных" as db
+
+user -> website: Запрос страницы календаря прививок
+website -> apiController: HTTP API вызов (getAllVaccines)
+apiController -> server: getAllVaccines()
+server -> db: SELECT * FROM Vaccines
+db -> server: Возврат данных о вакцинах (VaccineData)
+server -> apiController: Возврат списка вакцин (VaccineList)
+apiController -> website: Возврат списка вакцин
+website -> user: Отображение списка вакцин
+
+user -> website: Выбор вакцины
+website -> apiController: HTTP API вызов (getVaccineById)
+apiController -> server: getVaccineById(id)
+server -> db: SELECT * FROM Vaccines WHERE id = ?
+db -> server: Возврат данных о выбранной вакцине (VaccineData)
+server -> apiController: Возврат информации о выбранной вакцине (VaccineDetails)
+apiController -> website: Возврат информации о выбранной вакцине
+website -> user: Отображение информации о выбранной вакцине
+
+user -> website: Отметить факт вакцинации
+website -> apiController: HTTP API вызов (createVaccination)
+apiController -> server: createVaccination(vaccinationData)
+server -> db: INSERT INTO VaccinationRecords (data) VALUES (?)
+db -> server: Confirm VaccinationRecord
+server -> apiController: Confirm VaccinationRecord
+apiController -> website: Confirm VaccinationRecord
+website -> user: Отображение записи
+
+@enduml
