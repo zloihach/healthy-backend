@@ -1,79 +1,71 @@
 import {
   IsBoolean,
-  IsInt,
-  IsOptional,
   IsNotEmpty,
+  IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Express } from 'express';
+import { Transform } from 'class-transformer';
 
-/**
- * DTO для редактирования публикации
- *
- * @class
- */
 export class EditPublicationBodyDto {
-  /**
-   * Идентификатор публикации
-   * @type {number}
-   */
-  @ApiProperty({ example: 1, description: 'Идентификатор публикации' })
-  @IsInt()
-  id: number;
-
-  /**
-   * Полное название публикации
-   * @type {string}
-   */
   @ApiProperty({
-    required: false,
+    example: 1,
+    description: 'Идентификатор публикации',
+  })
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value), { toClassOnly: true })
+  @IsNumber()
+  readonly id: number;
+
+  @ApiProperty({
     example: 'Full Title',
     description: 'Полное название публикации',
+    required: false,
   })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  full_title?: string;
+  readonly full_title?: string;
 
-  /**
-   * Краткое название публикации
-   * @type {string}
-   */
   @ApiProperty({
-    required: false,
     example: 'Short Title',
     description: 'Краткое название публикации',
+    required: false,
   })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  short_title?: string;
+  readonly short_title?: string;
 
-  /**
-   * Текст публикации
-   * @type {string}
-   */
   @ApiProperty({
-    required: false,
     example: 'Publication Text',
     description: 'Текст публикации',
+    required: false,
   })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  text?: string;
+  readonly text?: string;
 
-  /**
-   * Статус активности публикации
-   * @type {boolean}
-   */
   @ApiProperty({
-    required: false,
-    type: 'boolean',
+    type: Boolean,
     example: true,
     description: 'Статус активности публикации',
+    required: false,
   })
   @IsOptional()
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   @IsBoolean()
-  is_active?: boolean;
+  readonly is_active?: boolean;
+
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Новое изображение публикации',
+    required: false,
+  })
+  @IsOptional()
+  readonly image?: Express.Multer.File;
 }

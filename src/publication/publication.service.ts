@@ -12,7 +12,7 @@ import { FileService } from '../files/file.service';
 export class PublicationService implements IPublicationService {
   constructor(
     private readonly db: DbService,
-    private readonly fileService: FileService, // Используем FileService вместо S3Service
+    private readonly fileService: FileService,
   ) {}
 
   async createPublication(
@@ -36,12 +36,18 @@ export class PublicationService implements IPublicationService {
   async editPublication(
     editPublicationDto: EditPublicationBodyDto,
   ): Promise<Publication> {
-    const { id, ...publicationData } = editPublicationDto;
+    const { id, image, ...publicationData } = editPublicationDto;
     await this.findPublicationById(id);
+
+    const imageUrl: string | null = image
+      ? await this.uploadImage(image)
+      : null;
+
     return this.db.publication.update({
       where: { id },
       data: {
         ...publicationData,
+        image_url: imageUrl,
         updated_at: new Date(),
       },
     });
@@ -106,11 +112,9 @@ export class PublicationService implements IPublicationService {
     const publication = await this.db.publication.findUnique({
       where: { id },
     });
-
     if (!publication) {
       throw new NotFoundException(`Publication with ID ${id} not found`);
     }
-
     return publication;
   }
 }

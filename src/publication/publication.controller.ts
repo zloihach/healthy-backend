@@ -75,16 +75,23 @@ export class PublicationController {
     return this.publicationService.createPublication(publicationData);
   }
 
-  @Patch('edit/:publicationId')
+  @Patch('edit')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Edit a publication' })
   @ApiOkResponse({ description: 'Publication edited successfully' })
   @HttpCode(HttpStatus.OK)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Data for editing a publication',
+    type: EditPublicationBodyDto,
+  })
+  @UseInterceptors(FileInterceptor('image'))
   async editPublication(
-    @Param('publicationId') publicationId: string,
     @Body() editPublicationDto: EditPublicationBodyDto,
+    @UploadedFile() image: Express.Multer.File,
   ): Promise<Publication> {
-    return this.publicationService.editPublication(editPublicationDto);
+    const updatedData = { ...editPublicationDto, image };
+    return this.publicationService.editPublication(updatedData);
   }
 
   @Patch('setStatus/:publicationId')
