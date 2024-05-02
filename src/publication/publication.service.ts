@@ -73,13 +73,21 @@ export class PublicationService implements IPublicationService {
     searchPublicationDto: SearchPublicationBodyDto,
   ): Promise<Publication[]> {
     const { keyword, isActive } = searchPublicationDto;
+
+    const whereClause: any = {};
+
+    if (keyword !== undefined) {
+      whereClause.full_title = {
+        contains: keyword,
+      };
+    }
+
+    if (isActive !== undefined) {
+      whereClause.is_active = isActive;
+    }
+
     return this.db.publication.findMany({
-      where: {
-        full_title: {
-          contains: keyword,
-        },
-        is_active: isActive,
-      },
+      where: whereClause,
     });
   }
 
