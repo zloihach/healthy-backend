@@ -7,11 +7,11 @@ export class FileService {
 
   async uploadFile(dataBuffer: Buffer, filename: string): Promise<string> {
     try {
-      const uploadResult = await this.s3Service.uploadPublicFile(
+      const fileUrl = await this.s3Service.uploadPublicFile(
         dataBuffer,
         filename,
       );
-      return uploadResult.Location;
+      return fileUrl;
     } catch (error) {
       console.error('Error uploading file:', error);
       throw error;
@@ -20,7 +20,7 @@ export class FileService {
 
   async deleteFile(fileKey: string): Promise<void> {
     try {
-      await this.s3Service.deleteFile(fileKey);
+      await this.s3Service.deletePublicFile(fileKey);
     } catch (error) {
       console.error('Error deleting file:', error);
       throw error;
