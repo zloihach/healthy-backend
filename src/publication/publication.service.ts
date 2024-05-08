@@ -7,6 +7,7 @@ import { IPublicationService } from './interface';
 import { DbService } from '../db/db.service';
 import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
 import { FileService } from '../files/file.service';
+import { PaginationQueryDto } from './dto/pagginationDto';
 
 @Injectable()
 export class PublicationService implements IPublicationService {
@@ -66,9 +67,14 @@ export class PublicationService implements IPublicationService {
       },
     });
   }
-
-  async getAllPublications(): Promise<Publication[]> {
-    return this.db.publication.findMany();
+  async getAllPublications({
+    page,
+    limit,
+  }: PaginationQueryDto): Promise<Publication[]> {
+    return this.db.publication.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
   }
 
   async getPublicationById(id: number): Promise<Publication> {
@@ -116,5 +122,9 @@ export class PublicationService implements IPublicationService {
       throw new NotFoundException(`Publication with ID ${id} not found`);
     }
     return publication;
+  }
+
+  async countPublications(): Promise<number> {
+    return this.db.publication.count();
   }
 }

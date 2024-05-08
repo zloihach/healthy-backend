@@ -31,23 +31,41 @@ import { CreatePublicationBodyDto } from './dto/createPublicationDto';
 import { EditPublicationBodyDto } from './dto/editPublicationDto';
 import { SetPublicationStatusBodyDto } from './dto/setPublicationStatusDto';
 import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
+import { PaginationQueryDto } from './dto/pagginationDto';
 
 @Controller('publication')
 @ApiTags('Publication')
-@UseGuards(AuthGuard, RoleGuard)
+// @UseGuards(AuthGuard, RoleGuard)
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 
-  @Get('getAll')
-  @Roles(Role.User)
-  @ApiOperation({ summary: 'Get all publications' })
-  @ApiOkResponse({ description: 'List of publications fetched successfully' })
-  @HttpCode(HttpStatus.OK)
-  async getAllPublications() {
-    return this.publicationService.getAllPublications();
+  @Get()
+  @ApiOperation({ summary: 'Retrieve a list of publications with pagination' })
+  @ApiOkResponse({ description: 'Publications retrieved successfully' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number of the pagination',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Number of items per page',
+  })
+  async getAllPublications(@Query() paginationQueryDto: PaginationQueryDto) {
+    return this.publicationService.getAllPublications(paginationQueryDto);
   }
 
-  @Get('getById/:publicationId')
+  @Get('/count')
+  @ApiOperation({ summary: 'Count total number of publications' })
+  @ApiOkResponse({
+    description: 'Total number of publications counted successfully',
+  })
+  async countPublications() {
+    return this.publicationService.countPublications();
+  }
+
+  @Get('get/:publicationId')
   @Roles(Role.User)
   @ApiOperation({ summary: 'Get publication by ID' })
   @ApiOkResponse({ description: 'Publication fetched successfully' })
