@@ -49,26 +49,6 @@ export class UsersController {
     return this.userService.findByEmail(email);
   }
 
-  @Get('child')
-  @UseGuards(AuthGuard)
-  @Roles(Role.User)
-  @ApiOperation({ summary: 'Get all user children' })
-  @ApiOkResponse({ description: 'Children fetched successfully' })
-  @HttpCode(HttpStatus.OK)
-  async getAllUserChild() {
-    return true;
-  }
-
-  @Get('child/:id')
-  @UseGuards(AuthGuard)
-  @Roles(Role.User)
-  @ApiOperation({ summary: 'Get user child by ID' })
-  @ApiOkResponse({ description: 'Child fetched successfully' })
-  @HttpCode(HttpStatus.OK)
-  async getUserChildById(@Param('id') id: string) {
-    return id;
-  }
-
   @Patch(':id/activate')
   @UseGuards(AuthGuard)
   @Roles(Role.Admin)

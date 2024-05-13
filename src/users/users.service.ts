@@ -19,7 +19,9 @@ export class UsersService implements IUserService {
   }
 
   async getUserById(id: number): Promise<User | null> {
-    return this.db.user.findFirst({ where: { id } });
+    return this.db.user.findFirst({
+      where: { id: id }, // Ensure the id is correctly used here
+    });
   }
 
   async activateUser(id: number): Promise<User> {

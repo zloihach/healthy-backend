@@ -17,11 +17,15 @@ import { PublicationModule } from './publication/publication.module';
 import { FileModule } from './files/file.module';
 import { ConfigModule } from '@nestjs/config';
 import { S3Module } from './s3/s3.module';
+import { ChildrenModule } from './users/children/children/children.module';
+import { ChildrenController } from './users/children/children/children.controller';
+import { ChildrenService } from './users/children/children/children.service';
 @Module({
   imports: [
     DbModule,
     AuthModule,
     UsersModule,
+    ChildrenModule,
     VaccineModule,
     VaccinationModule,
     PublicationModule,
@@ -32,12 +36,14 @@ import { S3Module } from './s3/s3.module';
   controllers: [
     AppController,
     UsersController,
+    ChildrenController,
     VaccineController,
     VaccinationController,
   ],
   providers: [
     AppService,
     UsersService,
+    ChildrenService,
     VaccineService,
     AccessControlService,
     VaccinationService,
