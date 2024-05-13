@@ -77,4 +77,15 @@ export class UsersService implements IUserService {
       data: { ...updateUserDto, edited_at: new Date() },
     });
   }
+
+  async checkEmail(email: string) {
+    if (email) {
+      const user = await this.db.user.findFirst({ where: { email } });
+      if (user) {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
 }

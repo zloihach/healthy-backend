@@ -68,4 +68,12 @@ export class UsersController {
   async deactivateUser(@Param('id') id: string) {
     await this.userService.setUserStatus(Number(id), false);
   }
+
+  @Get('check-email/:email')
+  @ApiOperation({ summary: 'Check user email' })
+  @ApiOkResponse({ description: 'Check email successfully' })
+  @HttpCode(HttpStatus.OK)
+  async checkEmail(@Param('email') email: string) {
+    return await this.userService.checkEmail(email);
+  }
 }
