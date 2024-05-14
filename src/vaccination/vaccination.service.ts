@@ -193,6 +193,19 @@ export class VaccinationService implements IVaccinationService {
       );
     }
   }
+
+  async getAllVaccinationsForCurrentUser(
+    userId: number,
+  ): Promise<UserVaccine[]> {
+    const user = await this.userService.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+    return this.db.userVaccine.findMany({
+      where: { user_id: user.id },
+    });
+  }
+
   private calculateAgeInMonths(birthdate: Date): number {
     const today = new Date();
     const birthdateObj = new Date(birthdate);

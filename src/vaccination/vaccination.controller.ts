@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { VaccinationService } from './vaccination.service';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -40,6 +31,16 @@ export class VaccinationController {
     return this.vaccinationService.getUserVaccinations(Number(userid));
   }
 
+  @Get('user-vaccinations')
+  @Roles(Role.User)
+  @ApiOperation({ summary: 'Get all vaccinations for current user' })
+  @ApiOkResponse({ description: 'List of vaccinations fetched successfully' })
+  @HttpCode(HttpStatus.OK)
+  async getAllVaccinationsForCurrentUser(@Req() req) {
+    return await this.vaccinationService.getAllVaccinationsForCurrentUser(
+      req.user?.id,
+    );
+  }
   @Patch('update')
   @Roles(Role.User)
   @ApiOperation({ summary: 'Update a vaccination record' })
