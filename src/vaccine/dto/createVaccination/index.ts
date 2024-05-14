@@ -42,7 +42,7 @@ export class CreateVaccinationDto {
   })
   @IsString()
   @IsOptional()
-  medicalCenter?: string;
+  medical_center?: string;
 
   /**
    * Доза вакцины
@@ -60,7 +60,7 @@ export class CreateVaccinationDto {
   @ApiProperty({ type: 'string', required: false, example: 'Серийный номер' })
   @IsString()
   @IsOptional()
-  serialNumber?: string;
+  serial_number?: string;
 
   /**
    * Дата вакцинации
@@ -69,7 +69,7 @@ export class CreateVaccinationDto {
   @ApiProperty({ type: 'Date', required: true, example: '2023-01-01' })
   @IsNotEmpty()
   @Type(() => Date)
-  vaccinationDate?: Date;
+  vaccination_date?: Date;
 
   /**
    * Комментарий
@@ -87,5 +87,5 @@ export class CreateVaccinationDto {
   @ApiProperty({ type: 'boolean', example: true })
   @IsNotEmpty()
   @IsBoolean()
-  isVaccinated: boolean;
+  is_vaccinated: boolean;
 }

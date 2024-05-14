@@ -38,7 +38,7 @@ export class VaccinationService implements IVaccinationService {
     }
 
     const formattedVaccinationDate = this.formatDate(
-      vaccinationData.vaccinationDate,
+      vaccinationData.vaccination_date,
     );
 
     return this.db.userVaccine.create({
@@ -203,6 +203,14 @@ export class VaccinationService implements IVaccinationService {
     }
     return this.db.userVaccine.findMany({
       where: { user_id: user.id },
+      include: {
+        vaccine: {
+          select: {
+            name: true,
+            type: true,
+          },
+        },
+      },
     });
   }
 
