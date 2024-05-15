@@ -35,7 +35,7 @@ import { PaginationQueryDto } from './dto/pagginationDto';
 
 @Controller('publication')
 @ApiTags('Publication')
-// @UseGuards(AuthGuard, RoleGuard)
+@UseGuards(AuthGuard, RoleGuard)
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 

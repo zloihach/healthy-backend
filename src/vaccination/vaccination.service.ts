@@ -1,9 +1,4 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DbService } from '../db/db.service';
 import { UsersService } from '../users/users.service';
 import { VaccineService } from '../vaccine/vaccine.service';
@@ -194,24 +189,19 @@ export class VaccinationService implements IVaccinationService {
     }
   }
 
-  async getAllVaccinationsForCurrentUser(
-    userId: number,
-  ): Promise<UserVaccine[]> {
-    const user = await this.userService.getUserById(userId);
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
-    }
-    return this.db.userVaccine.findMany({
-      where: { user_id: user.id },
-      include: {
-        vaccine: {
-          select: {
-            name: true,
-            type: true,
-          },
+  async getAllVaccinationsForCurrentUser(userId: number) {
+    try {
+      return await this.db.userVaccine.findMany({
+        where: {
+          user_id: userId,
         },
-      },
-    });
+        select: {
+          vaccine: true,
+        },
+      });
+    } catch (error) {
+      throw new Error('An error occurred while getting all vaccinations.');
+    }
   }
 
   private calculateAgeInMonths(birthdate: Date): number {

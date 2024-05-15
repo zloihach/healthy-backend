@@ -1,9 +1,8 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DbService } from '../db/db.service';
 import { SignUpBodyDto } from '../auth/dto/signup';
 import { User } from '@prisma/client';
 import { VaccinationService } from '../vaccination/vaccination.service';
-
 import { IUserService } from './interfaces';
 
 @Injectable()
@@ -19,16 +18,11 @@ export class UsersService implements IUserService {
   }
 
   async getUserById(id: number): Promise<User | null> {
-    return this.db.user.findFirst({
-      where: { id: id }, // Ensure the id is correctly used here
-    });
+    return this.db.user.findFirst({ where: { id } });
   }
 
   async activateUser(id: number): Promise<User> {
-    return this.db.user.update({
-      where: { id },
-      data: { is_active: true },
-    });
+    return this.db.user.update({ where: { id }, data: { is_active: true } });
   }
 
   async create(
@@ -65,10 +59,7 @@ export class UsersService implements IUserService {
   }
 
   async setUserStatus(id: number, status: boolean): Promise<User> {
-    return this.db.user.update({
-      where: { id },
-      data: { is_active: status },
-    });
+    return this.db.user.update({ where: { id }, data: { is_active: status } });
   }
 
   async updateUser(id: number, updateUserDto: any): Promise<User> {
@@ -81,9 +72,7 @@ export class UsersService implements IUserService {
   async checkEmail(email: string) {
     if (email) {
       const user = await this.db.user.findFirst({ where: { email } });
-      if (user) {
-        return true;
-      }
+      return !!user;
     } else {
       return false;
     }

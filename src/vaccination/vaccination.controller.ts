@@ -1,4 +1,13 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post, UseGuards,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { VaccinationService } from './vaccination.service';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -7,6 +16,11 @@ import { UserVaccine } from '@prisma/client';
 import { CreateVaccinationDto } from '../vaccine/dto/createVaccination';
 import { UpdateVaccinationBodyDto } from './dto/updateVaccinationBody';
 import { SetVaccinationStatusBodyDto } from './dto/setVaccinationStatus';
+import { UserIdFromSession } from '../auth/decorators/user-id-from-session.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { SessionInfo } from '../auth/decorators/session-info.decorator';
+import { GetSessionInfoDto } from '../auth/dto/sessioninfo';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('vaccination')
 @ApiTags('Vaccination')
@@ -32,15 +46,24 @@ export class VaccinationController {
   }
 
   @Get('user-vaccinations')
+  @UseGuards(AuthGuard)
   @Roles(Role.User)
   @ApiOperation({ summary: 'Get all vaccinations for current user' })
   @ApiOkResponse({ description: 'List of vaccinations fetched successfully' })
   @HttpCode(HttpStatus.OK)
-  async getAllVaccinationsForCurrentUser(@Req() req) {
-    return await this.vaccinationService.getAllVaccinationsForCurrentUser(
-      req.user?.id,
-    );
+  async getAllVaccinationsForCurrentUser(
+    @SessionInfo() session: GetSessionInfoDto,
+  ) {
+    try {
+      const userId = session.id;
+      return await this.vaccinationService.getAllVaccinationsForCurrentUser(
+        userId,
+      );
+    } catch (error) {
+      throw new Error('An error occurred while getting all vaccinations.');
+    }
   }
+
   @Patch('update')
   @Roles(Role.User)
   @ApiOperation({ summary: 'Update a vaccination record' })
