@@ -195,7 +195,7 @@ export class VaccinationService implements IVaccinationService {
         where: {
           user_id: userId,
         },
-        select: {
+        include: {
           vaccine: true,
         },
       });
