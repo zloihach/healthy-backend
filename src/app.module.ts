@@ -20,11 +20,16 @@ import { S3Module } from './s3/s3.module';
 import { ChildrenModule } from './users/children/children/children.module';
 import { ChildrenController } from './users/children/children/children.controller';
 import { ChildrenService } from './users/children/children/children.service';
-import { ScheduleModule } from '@nestjs/schedule';
-import { RedisModule } from '@nestjs-modules/ioredis';
+import redisConfig from './common/config/redis.config';
+import swaggerConfig from './common/config/swagger.config';
+import appConfig from './common/config/app.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [appConfig, redisConfig, swaggerConfig],
+    }),
     DbModule,
     AuthModule,
     UsersModule,
@@ -35,13 +40,6 @@ import { RedisModule } from '@nestjs-modules/ioredis';
     FileModule,
     ConfigModule,
     S3Module,
-    ScheduleModule.forRoot(),
-    RedisModule.forRoot({
-      config: {
-        host: 'redis', // имя сервиса Redis в Docker Compose
-        port: 6379,
-      },
-    }),
   ],
   controllers: [
     AppController,
