@@ -8,12 +8,14 @@ import { DbService } from '../db/db.service';
 import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
 import { FileService } from '../files/file.service';
 import { PaginationQueryDto } from './dto/pagginationDto';
+import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class PublicationService implements IPublicationService {
   constructor(
     private readonly db: DbService,
     private readonly fileService: FileService,
+    private readonly redisService: RedisService,
   ) {}
 
   async createPublication(

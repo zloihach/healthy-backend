@@ -23,6 +23,8 @@ import { ChildrenService } from './users/children/children/children.service';
 import redisConfig from './common/config/redis.config';
 import swaggerConfig from './common/config/swagger.config';
 import appConfig from './common/config/app.config';
+import { RedisService } from '../redis/redis.service';
+import { RedisModule } from '@nestjs-modules/ioredis';
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import appConfig from './common/config/app.config';
     FileModule,
     ConfigModule,
     S3Module,
+    RedisModule,
   ],
   controllers: [
     AppController,
