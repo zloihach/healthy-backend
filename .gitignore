@@ -39,3 +39,4 @@ lerna-debug.log*
 
 #Redis
 ./redis/data
+./redisinsight
