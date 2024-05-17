@@ -9,7 +9,7 @@ import {
   Post,
   Query,
   UploadedFile,
-  UseGuards,
+  // UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -20,8 +20,8 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from '../auth/guards/auth.guard';
-import { RoleGuard } from '../auth/guards/role.guard';
+// import { AuthGuard } from '../auth/guards/auth.guard';
+// import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { Publication } from '@prisma/client';
@@ -35,7 +35,7 @@ import { PaginationQueryDto } from './dto/pagginationDto';
 
 @Controller('publication')
 @ApiTags('Publication')
-@UseGuards(AuthGuard, RoleGuard)
+// @UseGuards(AuthGuard, RoleGuard)
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 
