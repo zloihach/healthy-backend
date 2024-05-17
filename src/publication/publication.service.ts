@@ -18,15 +18,15 @@ export class PublicationService implements IPublicationService {
     private readonly redisService: RedisService,
   ) {}
 
+  private readonly cacheKeyPrefix = 'publication:';
+
   async createPublication(
     createPublicationBodyDto: CreatePublicationBodyDto,
   ): Promise<Publication> {
     const { image, ...publicationData } = createPublicationBodyDto;
-    const imageUrl: string | null = image
-      ? await this.uploadImage(image)
-      : null;
+    const imageUrl: string | null = image ? await this.uploadImage(image) : null;
 
-    return this.db.publication.create({
+    const publication = await this.db.publication.create({
       data: {
         ...publicationData,
         image_url: imageUrl,
@@ -34,6 +34,9 @@ export class PublicationService implements IPublicationService {
         updated_at: new Date(),
       },
     });
+
+    await this.redisService.delete(this.cacheKeyPrefix + 'all:*');
+    return publication;
   }
 
   async editPublication(
@@ -42,11 +45,9 @@ export class PublicationService implements IPublicationService {
     const { id, image, ...publicationData } = editPublicationDto;
     await this.findPublicationById(id);
 
-    const imageUrl: string | null = image
-      ? await this.uploadImage(image)
-      : null;
+    const imageUrl: string | null = image ? await this.uploadImage(image) : null;
 
-    return this.db.publication.update({
+    const updatedPublication = await this.db.publication.update({
       where: { id },
       data: {
         ...publicationData,
@@ -54,6 +55,14 @@ export class PublicationService implements IPublicationService {
         updated_at: new Date(),
       },
     });
+
+    await this.redisService.insert(
+      this.cacheKeyPrefix + updatedPublication.id,
+      JSON.stringify(updatedPublication),
+    );
+    await this.redisService.delete(this.cacheKeyPrefix + 'all:*');
+
+    return updatedPublication;
   }
 
   async setPublicationStatus(
@@ -61,26 +70,56 @@ export class PublicationService implements IPublicationService {
   ): Promise<Publication> {
     const { id, is_active } = setPublicationStatusDto;
     await this.findPublicationById(id);
-    return this.db.publication.update({
+
+    const updatedPublication = await this.db.publication.update({
       where: { id },
       data: {
         is_active,
         updated_at: new Date(),
       },
     });
+
+    await this.redisService.insert(
+      this.cacheKeyPrefix + updatedPublication.id,
+      JSON.stringify(updatedPublication),
+    );
+    await this.redisService.delete(this.cacheKeyPrefix + 'all:*');
+
+    return updatedPublication;
   }
+
   async getAllPublications({
-    page,
-    limit,
-  }: PaginationQueryDto): Promise<Publication[]> {
-    return this.db.publication.findMany({
+                             page,
+                             limit,
+                           }: PaginationQueryDto): Promise<Publication[]> {
+    const cacheKey = `${this.cacheKeyPrefix}all:${page}:${limit}`;
+    const cachedPublications = await this.redisService.get(cacheKey);
+
+    if (cachedPublications) {
+      return JSON.parse(cachedPublications);
+    }
+
+    const publications = await this.db.publication.findMany({
       skip: (page - 1) * limit,
       take: limit,
     });
+
+    await this.redisService.insert(cacheKey, JSON.stringify(publications));
+    return publications;
   }
 
   async getPublicationById(id: number): Promise<Publication> {
-    return this.findPublicationById(id);
+    const cacheKey = this.cacheKeyPrefix + id;
+    const cachedPublication = await this.redisService.get(cacheKey);
+
+    if (cachedPublication) {
+      return JSON.parse(cachedPublication);
+    }
+
+    const publication = await this.findPublicationById(id);
+
+    await this.redisService.insert(cacheKey, JSON.stringify(publication));
+    return publication;
   }
 
   async searchPublication(
@@ -100,9 +139,19 @@ export class PublicationService implements IPublicationService {
       whereClause.is_active = isActive;
     }
 
-    return this.db.publication.findMany({
+    const cacheKey = `${this.cacheKeyPrefix}search:${JSON.stringify(whereClause)}`;
+    const cachedPublications = await this.redisService.get(cacheKey);
+
+    if (cachedPublications) {
+      return JSON.parse(cachedPublications);
+    }
+
+    const publications = await this.db.publication.findMany({
       where: whereClause,
     });
+
+    await this.redisService.insert(cacheKey, JSON.stringify(publications));
+    return publications;
   }
 
   private async uploadImage(image: {
@@ -127,6 +176,15 @@ export class PublicationService implements IPublicationService {
   }
 
   async countPublications(): Promise<number> {
-    return this.db.publication.count();
+    const cacheKey = `${this.cacheKeyPrefix}count`;
+    const cachedCount = await this.redisService.get(cacheKey);
+
+    if (cachedCount) {
+      return parseInt(cachedCount, 10);
+    }
+
+    const count = await this.db.publication.count();
+    await this.redisService.insert(cacheKey, count.toString());
+    return count;
   }
 }

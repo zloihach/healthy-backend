@@ -5,9 +5,5 @@ export default registerAs('app', () => {
   return {
     nodeEnv: process.env.NODE_ENV || 'development',
     port: port,
-    cors: {
-      origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
-      credentials: true,
-    },
   };
 });

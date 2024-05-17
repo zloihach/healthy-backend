@@ -16,6 +16,7 @@ import { SessionInfo } from './decorators/session-info.decorator';
 import { SignInBodyDto } from './dto/signin';
 import { SignUpBodyDto } from './dto/signup';
 import { GetSessionInfoDto } from './dto/sessioninfo';
+import { RedisService } from '../../redis/redis.service';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -23,6 +24,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private cookieService: CookieService,
+    private redisService: RedisService,
   ) {}
 
   @Post('sign-in')
@@ -67,7 +69,20 @@ export class AuthController {
     description: 'Session information fetched successfully',
     type: GetSessionInfoDto,
   })
-  getSessionInfo(@SessionInfo() session: GetSessionInfoDto) {
+  async getSessionInfo(@SessionInfo() session: GetSessionInfoDto) {
+    const cacheKey = `session:${session.id}`;
+    const cachedSession = await this.redisService.get(cacheKey);
+
+    if (cachedSession) {
+      console.log(
+        `Redis: Fetched session info from cache with key ${cacheKey}`,
+      );
+      return JSON.parse(cachedSession);
+    }
+
+    await this.redisService.insert(cacheKey, JSON.stringify(session));
+    console.log(`Redis: Inserted session info into cache with key ${cacheKey}`);
+
     return session;
   }
 }

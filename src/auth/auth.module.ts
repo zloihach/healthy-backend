@@ -8,6 +8,7 @@ import * as process from 'process';
 import { AuthController } from './auth.controller';
 import { SharedModule } from './shared/shared.module';
 import { AccessControlService } from './shared/access-control.service';
+import { RedisModule } from '../../redis/redis.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AccessControlService } from './shared/access-control.service';
       signOptions: { expiresIn: '1d' },
     }),
     SharedModule,
+    RedisModule,
   ],
   controllers: [AuthController],
   providers: [

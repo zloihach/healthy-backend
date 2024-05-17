@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SignUpBodyDto } from './dto/signup';
 import { CookieService } from './shared/cookie.service';
 import { Response } from 'express';
+import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,10 @@ export class AuthService {
     private readonly passwordService: PasswordService,
     private readonly jwtService: JwtService,
     private readonly cookieService: CookieService,
+    private readonly redisService: RedisService,
   ) {}
+
+  private readonly cacheKeyPrefix = 'auth:';
 
   async signUp(signUpBodyDto: SignUpBodyDto) {
     const user = await this.userService.findByEmail(signUpBodyDto.email);
@@ -38,11 +42,45 @@ export class AuthService {
       email: newUser.email,
       role: newUser.role,
     });
+
+    await this.redisService.insert(
+      this.cacheKeyPrefix + newUser.id,
+      JSON.stringify(newUser),
+    );
+    console.log(
+      `Redis: Inserted new user into cache with key ${
+        this.cacheKeyPrefix + newUser.id
+      }`,
+    );
+
     return { accessToken };
   }
 
   async signIn(email: string, password: string) {
-    const user = await this.userService.findByEmail(email);
+    const cachedUser = await this.redisService.get(this.cacheKeyPrefix + email);
+    let user;
+    if (cachedUser) {
+      console.log(
+        `Redis: Fetched user from cache with key ${
+          this.cacheKeyPrefix + email
+        }`,
+      );
+      user = JSON.parse(cachedUser);
+    } else {
+      user = await this.userService.findByEmail(email);
+      if (user) {
+        await this.redisService.insert(
+          this.cacheKeyPrefix + email,
+          JSON.stringify(user),
+        );
+        console.log(
+          `Redis: Inserted user into cache with key ${
+            this.cacheKeyPrefix + email
+          }`,
+        );
+      }
+    }
+
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -60,5 +98,6 @@ export class AuthService {
 
   async signOut(res: Response) {
     this.cookieService.removeToken(res);
+    console.log('User signed out and token removed from cookies');
   }
 }
