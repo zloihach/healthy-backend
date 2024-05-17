@@ -26,7 +26,7 @@ export const setupSwagger = async (app: INestApplication) => {
 
   const customOptions: SwaggerCustomOptions = {
     swaggerOptions: {
-      // persistAuthorization: true,
+      // pexrsistAuthorization: true,
     },
     customSiteTitle: swaggerConfig.siteTitle,
   };

@@ -23,8 +23,9 @@ import { ChildrenService } from './users/children/children/children.service';
 import redisConfig from './common/config/redis.config';
 import swaggerConfig from './common/config/swagger.config';
 import appConfig from './common/config/app.config';
-import { RedisService } from '../redis/redis.service';
 import { RedisModule } from '@nestjs-modules/ioredis';
+import { WinstonModule } from 'nest-winston';
+import { createLoggerOptions } from './common/config/logger.config';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
       isGlobal: true,
       load: [appConfig, redisConfig, swaggerConfig],
     }),
+    WinstonModule.forRoot(createLoggerOptions()),
     DbModule,
     AuthModule,
     UsersModule,
