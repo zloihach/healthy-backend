@@ -44,6 +44,48 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=password
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - default
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      - prometheus
+    networks:
+      - default
+    volumes:
+      - grafana-storage:/var/lib/grafana
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=admin
+#      - GF_SECURITY_ADMIN_PASSWORD=admin_password
+
+  nest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-app
+    restart: always
+    ports:
+      - '3001:3001'
+    depends_on:
+      - healthy-db
+      - redis
+    networks:
+      - default
+    env_file: .env
+
 networks:
   default:
     driver: bridge
@@ -54,4 +96,6 @@ volumes:
   redis-data:
     driver: local
   redisinsight-data:
+    driver: local
+  grafana-storage:
     driver: local

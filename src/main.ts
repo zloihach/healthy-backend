@@ -26,8 +26,18 @@ async function bootstrap() {
     }),
   );
   logger.log('CORS enabled for http://localhost:4200');
-  app.use(csurf());
-  logger.log('CSURF setup completed');
+
+  // app.use(
+  //   csurf({
+  //     cookie: {
+  //       httpOnly: true,
+  //       sameSite: 'strict',
+  //       secure: process.env.NODE_ENV === 'production',
+  //     },
+  //   }),
+  // );
+  // logger.log('CSURF setup completed');
+
   await setupSwagger(app);
   logger.log('Swagger setup completed');
 

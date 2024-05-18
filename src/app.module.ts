@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DbModule } from './db/db.module';
@@ -27,6 +27,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 import { WinstonModule } from 'nest-winston';
 import { createLoggerOptions } from './common/config/logger.config';
 import s3Config from './common/config/s3.config';
+import { MetricsMiddleware } from './metrics.middleware';
 
 @Module({
   imports: [
@@ -63,4 +64,8 @@ import s3Config from './common/config/s3.config';
     VaccinationService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(MetricsMiddleware).forRoutes('*');
+  }
+}
