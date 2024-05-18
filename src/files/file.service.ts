@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { S3Service } from '../s3/s3.service';
 import { v4 as uuidv4 } from 'uuid';
 import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class FileService {
+  private readonly logger = new Logger(FileService.name);
+
   constructor(
     private readonly s3Service: S3Service,
     private readonly redisService: RedisService,
@@ -19,13 +21,13 @@ export class FileService {
       );
 
       await this.redisService.insert(`file:${newName}`, fileUrl);
-      console.log(
+      this.logger.log(
         `Redis: Inserted file URL into cache with key file:${newName}`,
       );
 
       return fileUrl;
     } catch (error) {
-      console.error('Error uploading file:', error);
+      this.logger.error('Error uploading file:', error);
       throw error;
     }
   }
@@ -35,9 +37,9 @@ export class FileService {
       await this.s3Service.deletePublicFile(fileKey);
 
       await this.redisService.delete(`file:${fileKey}`);
-      console.log(`Redis: Deleted cache for key file:${fileKey}`);
+      this.logger.log(`Redis: Deleted cache for key file:${fileKey}`);
     } catch (error) {
-      console.error('Error deleting file:', error);
+      this.logger.error('Error deleting file:', error);
       throw error;
     }
   }

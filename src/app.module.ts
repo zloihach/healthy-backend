@@ -26,12 +26,13 @@ import appConfig from './common/config/app.config';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { WinstonModule } from 'nest-winston';
 import { createLoggerOptions } from './common/config/logger.config';
+import s3Config from './common/config/s3.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, redisConfig, swaggerConfig],
+      load: [appConfig, redisConfig, swaggerConfig, s3Config],
     }),
     WinstonModule.forRoot(createLoggerOptions()),
     DbModule,

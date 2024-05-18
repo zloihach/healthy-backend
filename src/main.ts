@@ -1,26 +1,42 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import { setupSwagger } from './swagger';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
+  const logger = new Logger('Bootstrap');
+
   const app = await NestFactory.create(AppModule);
+  logger.log('Nest application created');
+
   app.use(cookieParser());
+  logger.log('Cookie parser initialized');
+
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  logger.log('Global validation pipe set up');
+
   app.use(
     cors({
       origin: 'http://localhost:4200',
       credentials: true,
     }),
   );
+  logger.log('CORS enabled for http://localhost:4200');
 
-  setupSwagger(app).then((r) => console.log('setupSwagger', r));
+  await setupSwagger(app);
+  logger.log('Swagger setup completed');
+
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
   await app.listen(port);
+
+  logger.log(`Server is running on port ${port}`);
 }
-bootstrap().then(() => console.log('Server is running'));
+
+bootstrap().catch((error) => {
+  const logger = new Logger('Bootstrap');
+  logger.error('Error during bootstrap', error.stack);
+});

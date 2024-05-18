@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   S3Client,
@@ -14,21 +14,24 @@ import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class S3Service {
+  private readonly logger = new Logger(S3Service.name);
   private readonly s3: S3Client;
   private readonly bucketName: string;
+
   constructor(
     private configService: ConfigService,
     private redisService: RedisService,
   ) {
+    const s3Config = this.configService.get('s3');
     this.s3 = new S3Client({
-      region: this.configService.get<string>('S3_REGION')!,
-      endpoint: this.configService.get<string>('S3_ENDPOINT')!,
+      region: s3Config.region,
+      endpoint: s3Config.endpoint,
       credentials: {
-        accessKeyId: this.configService.get<string>('S3_ACCESS_ID')!,
-        secretAccessKey: this.configService.get<string>('S3_SECRET_KEY')!,
+        accessKeyId: s3Config.accessKeyId,
+        secretAccessKey: s3Config.secretAccessKey,
       },
     });
-    this.bucketName = this.configService.get<string>('S3_BUCKET_NAME')!;
+    this.bucketName = s3Config.bucketName;
   }
 
   async uploadPublicFile(
@@ -43,10 +46,10 @@ export class S3Service {
     });
     await this.s3.send(command);
 
-    const fileUrl = `${this.configService.get<string>('S3_ENDPOINT')}/${
+    const fileUrl = `${this.configService.get<string>('s3.endpoint')}/${
       this.bucketName
     }/${filename}`;
-    console.log(`Uploaded file to S3 with key ${filename}`);
+    this.logger.log(`Uploaded file to S3 with key ${filename}`);
     return fileUrl;
   }
 
@@ -58,7 +61,7 @@ export class S3Service {
     await this.s3.send(command);
 
     await this.redisService.delete(`s3:listObjects`);
-    console.log(`Redis: Cleared cache for key s3:listObjects`);
+    this.logger.log(`Redis: Cleared cache for key s3:listObjects`);
   }
 
   async listObjects(): Promise<string[]> {
@@ -66,7 +69,9 @@ export class S3Service {
     const cachedObjects = await this.redisService.get(cacheKey);
 
     if (cachedObjects) {
-      console.log(`Redis: Fetched listObjects from cache with key ${cacheKey}`);
+      this.logger.log(
+        `Redis: Fetched listObjects from cache with key ${cacheKey}`,
+      );
       return JSON.parse(cachedObjects);
     }
 
@@ -80,7 +85,9 @@ export class S3Service {
       ) || [];
 
     await this.redisService.insert(cacheKey, JSON.stringify(objectKeys));
-    console.log(`Redis: Inserted listObjects into cache with key ${cacheKey}`);
+    this.logger.log(
+      `Redis: Inserted listObjects into cache with key ${cacheKey}`,
+    );
     return objectKeys;
   }
 
@@ -89,7 +96,7 @@ export class S3Service {
     const cachedObject = await this.redisService.get(cacheKey);
 
     if (cachedObject) {
-      console.log(`Redis: Fetched object from cache with key ${cacheKey}`);
+      this.logger.log(`Redis: Fetched object from cache with key ${cacheKey}`);
       return Buffer.from(cachedObject, 'base64');
     }
 
@@ -108,7 +115,7 @@ export class S3Service {
 
       const objectBuffer = Buffer.concat(chunks);
       await this.redisService.insert(cacheKey, objectBuffer.toString('base64'));
-      console.log(`Redis: Inserted object into cache with key ${cacheKey}`);
+      this.logger.log(`Redis: Inserted object into cache with key ${cacheKey}`);
       return objectBuffer;
     } else {
       throw new Error('Expected a stream but did not receive one.');
@@ -123,9 +130,8 @@ export class S3Service {
     });
     await this.s3.send(command);
 
-    // Очистка кэша при копировании объекта
     await this.redisService.delete(`s3:listObjects`);
-    console.log(`Redis: Cleared cache for key s3:listObjects`);
+    this.logger.log(`Redis: Cleared cache for key s3:listObjects`);
   }
 
   async deleteObject(key: string): Promise<void> {
@@ -135,10 +141,9 @@ export class S3Service {
     });
     await this.s3.send(command);
 
-    // Очистка кэша при удалении объекта
     await this.redisService.delete(`s3:listObjects`);
     await this.redisService.delete(`s3:getObject:${key}`);
-    console.log(
+    this.logger.log(
       `Redis: Cleared cache for keys s3:listObjects and s3:getObject:${key}`,
     );
   }
@@ -149,8 +154,7 @@ export class S3Service {
     });
     await this.s3.send(command);
 
-    // Очистка кэша при удалении бакета
     await this.redisService.delete(`s3:listObjects`);
-    console.log(`Redis: Cleared cache for key s3:listObjects`);
+    this.logger.log(`Redis: Cleared cache for key s3:listObjects`);
   }
 }
