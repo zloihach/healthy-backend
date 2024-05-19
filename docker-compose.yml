@@ -89,20 +89,6 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-#  cadvisor:
-#    image: google/cadvisor:latest
-#    container_name: cadvisor
-#    restart: always
-#    ports:
-#      - '8080:8080'
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock:ro
-#      - /sys:/sys:ro
-#      - /var/lib/docker/:/var/lib/docker:ro
-#      - /cgroup:/sys/fs/cgroup:ro
-#    networks:
-#      - default
-#    platform: linux/amd64
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -123,7 +109,8 @@ services:
       - '9090:9090'
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-#      - ./monitoring/alert.rules.yml:/etc/prometheus/alert.rules.yml
+      - ./monitoring/rules/system_metrics_rules.yml:/etc/prometheus/system_metrics_rules.yml
+      - ./monitoring/rules/application_metrics_rules.yml:/etc/prometheus/application_metrics_rules.yml
     networks:
       - default
 
@@ -151,7 +138,7 @@ services:
     container_name: nest-app
     restart: always
     ports:
-      - '3001:3000'
+      - '3010:3000'
     depends_on:
       - healthy-db
       - redis

@@ -2,6 +2,7 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
+  IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -9,59 +10,51 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Sex } from '@prisma/client';
 import { Transform } from 'class-transformer';
 
-/**
- * DTO для создания учетной записи ребенка
- *
- * @class
- */
 export class CreateChildDto {
-  /**
-   * Фамилия ребенка
-   * @type {string}
-   */
-  @ApiProperty({ type: 'string', example: 'Иванов' })
+  @ApiProperty({
+    example: 'Иванов',
+    description: 'Фамилия ребенка',
+  })
   @IsString()
-  lastname: string;
+  @IsNotEmpty()
+  readonly lastname: string;
 
-  /**
-   * Имя ребенка
-   * @type {string}
-   */
-  @ApiProperty({ type: 'string', example: 'Иван' })
+  @ApiProperty({
+    example: 'Иван',
+    description: 'Имя ребенка',
+  })
   @IsString()
-  firstname: string;
+  @IsNotEmpty()
+  readonly firstname: string;
 
-  /**
-   * Отчество ребенка (опционально)
-   * @type {string}
-   */
-  @ApiProperty({ type: 'string', example: 'Иванович', required: false })
+  @ApiProperty({
+    example: 'Иванович',
+    description: 'Отчество ребенка',
+    required: false,
+  })
   @IsOptional()
   @IsString()
-  midname?: string;
+  readonly midname?: string;
 
-  /**
-   * Дата рождения ребенка
-   * @type {string}
-   */
-  @ApiProperty({ type: 'string', format: 'date', example: '2015-06-01' })
+  @ApiProperty({
+    example: '2015-06-06T00:00:00.000Z',
+    description: 'Дата рождения ребенка',
+  })
   @IsDateString()
-  dob: string;
+  readonly dob: Date;
 
-  /**
-   * Пол ребенка
-   * @type {Sex}
-   */
-  @ApiProperty({ enum: Sex, example: Sex.MALE })
+  @ApiProperty({
+    enum: Sex,
+    example: 'MALE',
+  })
   @IsEnum(Sex)
-  sex: Sex;
+  readonly sex: Sex;
 
-  /**
-   * Признак активности учетной записи ребенка
-   * @type {boolean}
-   */
-  @ApiProperty({ type: 'boolean', example: true })
+  @ApiProperty({
+    example: true,
+    description: 'Активность учетной записи ребенка',
+  })
   @Transform(({ value }) => value === 'true', { toClassOnly: true })
   @IsBoolean()
-  is_active: boolean;
+  readonly is_active: boolean;
 }

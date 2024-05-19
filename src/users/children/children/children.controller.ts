@@ -26,9 +26,14 @@ import { UpdateChildDto } from './dto/update-child.dto';
 import { SessionInfo } from '../../../auth/decorators/session-info.decorator';
 import { Role } from '../../../auth/enums/role.enum';
 import { GetSessionInfoDto } from '../../../auth/dto/sessioninfo';
+import { IsParentGuard } from '../../../common/guards/isParent.guard';
+import {
+  CreateVaccinationDto,
+  UpdateVaccinationDto,
+} from './dto/child-vaccination.dto';
 
-@Controller('children')
 @ApiTags('Children')
+@Controller('children')
 export class ChildrenController {
   constructor(private readonly childrenService: ChildrenService) {}
 
@@ -63,9 +68,12 @@ export class ChildrenController {
   @Roles(Role.User)
   @ApiOperation({ summary: 'Create a new child' })
   @ApiOkResponse({ description: 'Child created successfully' })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: CreateChildDto })
   @HttpCode(HttpStatus.CREATED)
+  @ApiConsumes('application/json')
+  @ApiBody({
+    description: 'Data for creating a child',
+    type: CreateChildDto,
+  })
   async createChild(
     @SessionInfo() session: GetSessionInfoDto,
     @Body() createChildDto: CreateChildDto,
@@ -79,10 +87,12 @@ export class ChildrenController {
   @Roles(Role.User)
   @ApiOperation({ summary: 'Update an existing child' })
   @ApiOkResponse({ description: 'Child updated successfully' })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UpdateChildDto })
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'id', description: 'Child ID' })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    description: 'Data for updating a child',
+    type: UpdateChildDto,
+  })
   async updateChild(
     @SessionInfo() session: GetSessionInfoDto,
     @Param('id') id: string,
@@ -105,5 +115,55 @@ export class ChildrenController {
   ) {
     const userId = session.id;
     return this.childrenService.deleteChild(userId, +id);
+  }
+
+  @Post(':childId/vaccinations')
+  @UseGuards(AuthGuard, IsParentGuard)
+  @Roles(Role.User)
+  @ApiOperation({ summary: 'Create a vaccination record for a child' })
+  @ApiOkResponse({ description: 'Vaccination record created successfully' })
+  @HttpCode(HttpStatus.CREATED)
+  @ApiConsumes('application/json')
+  @ApiBody({
+    description: 'Data for creating a vaccination record',
+    type: CreateVaccinationDto,
+  })
+  async createVaccination(
+    @SessionInfo() session: GetSessionInfoDto,
+    @Param('childId') childId: string,
+    @Body() createVaccinationDto: CreateVaccinationDto,
+  ) {
+    const userId = session.id;
+    return this.childrenService.createVaccination(
+      userId,
+      +childId,
+      createVaccinationDto,
+    );
+  }
+
+  @Patch(':childId/vaccinations/:vaccinationId')
+  @UseGuards(AuthGuard, IsParentGuard)
+  @Roles(Role.User)
+  @ApiOperation({ summary: 'Update a vaccination record for a child' })
+  @ApiOkResponse({ description: 'Vaccination record updated successfully' })
+  @HttpCode(HttpStatus.OK)
+  @ApiConsumes('application/json')
+  @ApiBody({
+    description: 'Data for updating a vaccination record',
+    type: UpdateVaccinationDto,
+  })
+  async updateVaccination(
+    @SessionInfo() session: GetSessionInfoDto,
+    @Param('childId') childId: string,
+    @Param('vaccinationId') vaccinationId: string,
+    @Body() updateVaccinationDto: UpdateVaccinationDto,
+  ) {
+    const userId = session.id;
+    return this.childrenService.updateVaccination(
+      userId,
+      +childId,
+      +vaccinationId,
+      updateVaccinationDto,
+    );
   }
 }

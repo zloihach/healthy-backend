@@ -29,6 +29,9 @@ import { createLoggerOptions } from './common/config/logger.config';
 import s3Config from './common/config/s3.config';
 import { MetricsMiddleware } from './metrics/metrics.middleware';
 import { MetricsController } from './metrics/metrics.controller';
+import { MailController } from './notification/mailer/mailer.controller';
+import { MailService } from './common/config/mail-service.config';
+import { MailModule } from './notification/mailer/mailer.module';
 
 @Module({
   imports: [
@@ -48,6 +51,7 @@ import { MetricsController } from './metrics/metrics.controller';
     ConfigModule,
     S3Module,
     RedisModule,
+    MailModule,
   ],
   controllers: [
     AppController,
@@ -56,6 +60,7 @@ import { MetricsController } from './metrics/metrics.controller';
     VaccineController,
     VaccinationController,
     MetricsController,
+    MailController,
   ],
   providers: [
     AppService,
@@ -64,6 +69,7 @@ import { MetricsController } from './metrics/metrics.controller';
     VaccineService,
     AccessControlService,
     VaccinationService,
+    MailService,
   ],
 })
 export class AppModule implements NestModule {

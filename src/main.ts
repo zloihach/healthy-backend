@@ -5,7 +5,6 @@ import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import { setupSwagger } from './swagger';
 import { ConfigService } from '@nestjs/config';
-import * as csurf from 'csurf';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -26,17 +25,6 @@ async function bootstrap() {
     }),
   );
   logger.log('CORS enabled for http://localhost:4200');
-
-  // app.use(
-  //   csurf({
-  //     cookie: {
-  //       httpOnly: true,
-  //       sameSite: 'strict',
-  //       secure: process.env.NODE_ENV === 'production',
-  //     },
-  //   }),
-  // );
-  // logger.log('CSURF setup completed');
 
   await setupSwagger(app);
   logger.log('Swagger setup completed');

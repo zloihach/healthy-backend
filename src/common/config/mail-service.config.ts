@@ -11,7 +11,7 @@ export class MailService {
     await this.mailerService.sendMail({
       to: email,
       subject: 'Welcome to our platform! Confirm your Email',
-      template: './confirmation', // Путь к вашему шаблону
+      template: './confirmation',
       context: {
         name: email,
         url,

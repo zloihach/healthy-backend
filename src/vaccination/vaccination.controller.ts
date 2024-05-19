@@ -6,7 +6,8 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Post, UseGuards,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { VaccinationService } from './vaccination.service';

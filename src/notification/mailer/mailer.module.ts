@@ -8,12 +8,13 @@ import { MailService } from './mailer.service';
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.example.com', // Замените на ваш SMTP сервер
-        port: 587,
-        secure: false, // true для 465, false для других портов
+        host: 'smtp.google.com', // Замените на ваш SMTP сервер
+        port: 465,
+        secure: true,
+        service: 'gmail',
         auth: {
-          user: 'user@example.com', // Замените на ваш email
-          pass: 'password', // Замените на ваш пароль
+          user: 'zloezlowork@gmail.com', // Замените на ваш email
+          pass: 'hrldaeejfqmnuhnt', // Замените на ваш пароль
         },
       },
       defaults: {

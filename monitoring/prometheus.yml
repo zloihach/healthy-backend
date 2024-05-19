@@ -34,5 +34,5 @@ alerting:
             - 'alertmanager:9093'
 
 rule_files:
-# - "first_rules.yml"
-# - "second_rules.yml"
+  - "/etc/prometheus/system_metrics_rules.yml"
+  - "/etc/prometheus/application_metrics_rules.yml"

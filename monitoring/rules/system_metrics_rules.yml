@@ -1,0 +1,47 @@
+groups:
+  - name: system_metrics
+    rules:
+      - alert: HighCPUUsage
+        expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (instance) > 0.8
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected on {{ $labels.instance }}"
+          description: "CPU usage is above 80% for more than 2 minutes on {{ $labels.instance }}."
+
+      - alert: HighMemoryUsage
+        expr: sum(container_memory_usage_bytes) by (instance) > 1e+9
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Memory usage detected on {{ $labels.instance }}"
+          description: "Memory usage is above 1GB for more than 2 minutes on {{ $labels.instance }}."
+
+      - alert: InstanceDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance down"
+          description: "An instance has been down for more than 5 minutes on {{ $labels.instance }}."
+
+      - alert: ServiceStarted
+        expr: up == 1
+        for: 1m
+        labels:
+          severity: info
+        annotations:
+          summary: "Service started on {{ $labels.instance }}"
+          description: "Service has started and is up for more than 1 minute on {{ $labels.instance }}."
+
+      - alert: AlwaysFiring
+        expr: vector(1)
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "This is a test alert"
+          description: "This alert is always firing and is used for testing purposes."
