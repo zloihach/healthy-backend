@@ -78,6 +78,43 @@ services:
     networks:
       - default
 
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: always
+    ports:
+      - '8080:8080'
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+#  cadvisor:
+#    image: google/cadvisor:latest
+#    container_name: cadvisor
+#    restart: always
+#    ports:
+#      - '8080:8080'
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - /sys:/sys:ro
+#      - /var/lib/docker/:/var/lib/docker:ro
+#      - /cgroup:/sys/fs/cgroup:ro
+#    networks:
+#      - default
+#    platform: linux/amd64
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    restart: always
+    ports:
+      - '9093:9093'
+    volumes:
+      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - default
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -85,7 +122,8 @@ services:
     ports:
       - '9090:9090'
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+#      - ./monitoring/alert.rules.yml:/etc/prometheus/alert.rules.yml
     networks:
       - default
 
