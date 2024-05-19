@@ -6,8 +6,8 @@ services:
     container_name: healthy-db
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     ports:
       - '5432:5432'
     volumes:
@@ -18,7 +18,7 @@ services:
     container_name: postgres-exporter
     restart: always
     environment:
-      - DATA_SOURCE_NAME=postgresql://postgres:password@healthy-db:5432/postgres?sslmode=disable
+      DATA_SOURCE_NAME: postgresql://postgres:password@healthy-db:5432/postgres?sslmode=disable
     ports:
       - '9187:9187'
     depends_on:
@@ -37,15 +37,15 @@ services:
     volumes:
       - redis-data:/data
     environment:
-      - REDIS_PASSWORD=password
+      REDIS_PASSWORD: password
 
   redis-exporter:
     image: oliver006/redis_exporter:latest
     container_name: redis-exporter
     restart: always
     environment:
-      - REDIS_ADDR=redis://:password@redis:6379
-      - REDIS_PASSWORD=password
+      REDIS_ADDR: redis://:password@redis:6379
+      REDIS_PASSWORD: password
     ports:
       - '9121:9121'
     depends_on:
@@ -64,8 +64,8 @@ services:
     volumes:
       - redisinsight-data:/data
     environment:
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=password
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: password
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -103,8 +103,8 @@ services:
       - grafana-storage:/var/lib/grafana
       - ./provisioning:/etc/grafana/provisioning
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin_password
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin_password
 
   nest-app:
     build:
@@ -119,12 +119,15 @@ services:
       - redis
     networks:
       - default
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     env_file: .env
     environment:
-      - SKIP_PRISMA_GENERATE=true
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=password
+      SKIP_PRISMA_GENERATE: true
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: password
 
 networks:
   default:
