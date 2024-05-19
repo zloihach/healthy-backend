@@ -10,7 +10,7 @@ import {
   DeleteBucketCommand,
 } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
-import { RedisService } from '../../redis/redis.service';
+import { RedisService } from '../../../redis/redis.service';
 
 @Injectable()
 export class S3Service {

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { S3Service } from '../s3/s3.service';
+import { S3Service } from './s3/s3.service';
 import { v4 as uuidv4 } from 'uuid';
 import { RedisService } from '../../redis/redis.service';
 
@@ -27,7 +27,7 @@ export class FileService {
 
       return fileUrl;
     } catch (error) {
-      this.logger.error('Error uploading file:', error);
+      this.logger.error('Error uploading files:', error);
       throw error;
     }
   }
@@ -39,7 +39,7 @@ export class FileService {
       await this.redisService.delete(`file:${fileKey}`);
       this.logger.log(`Redis: Deleted cache for key file:${fileKey}`);
     } catch (error) {
-      this.logger.error('Error deleting file:', error);
+      this.logger.error('Error deleting files:', error);
       throw error;
     }
   }

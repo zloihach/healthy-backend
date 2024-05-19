@@ -3,7 +3,7 @@ import { PublicationController } from './publication.controller';
 import { PublicationService } from './publication.service';
 import { DbModule } from '../db/db.module';
 import { AccessControlService } from '../auth/shared/access-control.service';
-import { S3Module } from '../s3/s3.module';
+import { S3Module } from '../files/s3/s3.module';
 import { FileModule } from '../files/file.module';
 import { RedisModule } from '../../redis/redis.module';
 

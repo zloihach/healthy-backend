@@ -13,6 +13,17 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
 
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: postgres-exporter
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:password@healthy-db:5432/postgres?sslmode=disable
+    ports:
+      - '9187:9187'
+    depends_on:
+      - healthy-db
+
   redis:
     build:
       context: ./redis
@@ -27,6 +38,18 @@ services:
       - redis-data:/data
     environment:
       - REDIS_PASSWORD=password
+
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis-exporter
+    restart: always
+    environment:
+      - REDIS_ADDR=redis://:password@redis:6379
+      - REDIS_PASSWORD=password
+    ports:
+      - '9121:9121'
+    depends_on:
+      - redis
 
   redisinsight:
     image: redislabs/redisinsight:latest
@@ -43,6 +66,17 @@ services:
     environment:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=password
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: always
+    ports:
+      - '9100:9100'
+    command:
+      - '--collector.processes'
+    networks:
+      - default
 
   prometheus:
     image: prom/prometheus:latest
@@ -67,9 +101,10 @@ services:
       - default
     volumes:
       - grafana-storage:/var/lib/grafana
-#    environment:
-#      - GF_SECURITY_ADMIN_USER=admin
-#      - GF_SECURITY_ADMIN_PASSWORD=admin_password
+      - ./provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin_password
 
   nest-app:
     build:
@@ -78,13 +113,18 @@ services:
     container_name: nest-app
     restart: always
     ports:
-      - '3001:3001'
+      - '3001:3000'
     depends_on:
       - healthy-db
       - redis
     networks:
       - default
     env_file: .env
+    environment:
+      - SKIP_PRISMA_GENERATE=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=password
 
 networks:
   default:

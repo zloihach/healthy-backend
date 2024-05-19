@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FileService } from './file.service';
-import { S3Service } from '../s3/s3.service';
+import { S3Service } from './s3/s3.service';
 
 describe('FileService', () => {
   let fileService: FileService;
@@ -25,7 +25,7 @@ describe('FileService', () => {
   });
 
   describe('uploadFile', () => {
-    it('should return the location of the uploaded file', async () => {
+    it('should return the location of the uploaded files', async () => {
       const mockLocation = 'https://example.com/image.jpg';
       jest.spyOn(s3Service, 'uploadPublicFile').mockResolvedValue({
         ETag: 'etag',

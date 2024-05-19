@@ -23,7 +23,7 @@ RUN npm run build
 RUN ls -la dist/src
 
 # Открываем порт для приложения
-EXPOSE 3001
+EXPOSE 3000
 
 # Запускаем приложение
 CMD ["node", "dist/src/main"]

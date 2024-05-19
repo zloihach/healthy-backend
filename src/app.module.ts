@@ -16,7 +16,7 @@ import { AuthModule } from './auth/auth.module';
 import { PublicationModule } from './publication/publication.module';
 import { FileModule } from './files/file.module';
 import { ConfigModule } from '@nestjs/config';
-import { S3Module } from './s3/s3.module';
+import { S3Module } from './files/s3/s3.module';
 import { ChildrenModule } from './users/children/children/children.module';
 import { ChildrenController } from './users/children/children/children.controller';
 import { ChildrenService } from './users/children/children/children.service';
@@ -27,7 +27,8 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 import { WinstonModule } from 'nest-winston';
 import { createLoggerOptions } from './common/config/logger.config';
 import s3Config from './common/config/s3.config';
-import { MetricsMiddleware } from './metrics.middleware';
+import { MetricsMiddleware } from './metrics/metrics.middleware';
+import { MetricsController } from './metrics/metrics.controller';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { MetricsMiddleware } from './metrics.middleware';
     ChildrenController,
     VaccineController,
     VaccinationController,
+    MetricsController,
   ],
   providers: [
     AppService,
