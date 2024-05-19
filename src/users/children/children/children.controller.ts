@@ -13,10 +13,19 @@ import {
 import { ChildrenService } from './children.service';
 import { AuthGuard } from '../../../auth/guards/auth.guard';
 import { Roles } from '../../../auth/decorators/roles.decorator';
-import { Role } from '../../../auth/enums/role.enum';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiParam } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiParam,
+} from '@nestjs/swagger';
 import { CreateChildDto } from './dto/create-child.dto';
 import { UpdateChildDto } from './dto/update-child.dto';
+import { SessionInfo } from '../../../auth/decorators/session-info.decorator';
+import { Role } from '../../../auth/enums/role.enum';
+import { GetSessionInfoDto } from '../../../auth/dto/sessioninfo';
 
 @Controller('children')
 @ApiTags('Children')
@@ -29,8 +38,9 @@ export class ChildrenController {
   @ApiOperation({ summary: 'Get all user children' })
   @ApiOkResponse({ description: 'Children fetched successfully' })
   @HttpCode(HttpStatus.OK)
-  async getAllUserChildren() {
-    return this.childrenService.getAllUserChildren();
+  async getAllUserChildren(@SessionInfo() session: GetSessionInfoDto) {
+    const userId = session.id;
+    return this.childrenService.getAllUserChildren(userId);
   }
 
   @Get(':id')
@@ -40,8 +50,12 @@ export class ChildrenController {
   @ApiOkResponse({ description: 'Child fetched successfully' })
   @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'id', description: 'Child ID' })
-  async getUserChildById(@Param('id') id: string) {
-    return this.childrenService.getUserChildById(+id);
+  async getUserChildById(
+    @SessionInfo() session: GetSessionInfoDto,
+    @Param('id') id: string,
+  ) {
+    const userId = session.id;
+    return this.childrenService.getUserChildById(userId, +id);
   }
 
   @Post()
@@ -49,10 +63,15 @@ export class ChildrenController {
   @Roles(Role.User)
   @ApiOperation({ summary: 'Create a new child' })
   @ApiOkResponse({ description: 'Child created successfully' })
+  @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateChildDto })
   @HttpCode(HttpStatus.CREATED)
-  async createChild(@Body() createChildDto: CreateChildDto) {
-    return this.childrenService.createChild(createChildDto);
+  async createChild(
+    @SessionInfo() session: GetSessionInfoDto,
+    @Body() createChildDto: CreateChildDto,
+  ) {
+    const userId = session.id;
+    return this.childrenService.createChild(userId, createChildDto);
   }
 
   @Patch(':id')
@@ -60,14 +79,17 @@ export class ChildrenController {
   @Roles(Role.User)
   @ApiOperation({ summary: 'Update an existing child' })
   @ApiOkResponse({ description: 'Child updated successfully' })
+  @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UpdateChildDto })
   @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'id', description: 'Child ID' })
   async updateChild(
+    @SessionInfo() session: GetSessionInfoDto,
     @Param('id') id: string,
     @Body() updateChildDto: UpdateChildDto,
   ) {
-    return this.childrenService.updateChild(+id, updateChildDto);
+    const userId = session.id;
+    return this.childrenService.updateChild(userId, +id, updateChildDto);
   }
 
   @Delete(':id')
@@ -77,7 +99,11 @@ export class ChildrenController {
   @ApiOkResponse({ description: 'Child deleted successfully' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiParam({ name: 'id', description: 'Child ID' })
-  async deleteChild(@Param('id') id: string) {
-    return this.childrenService.deleteChild(+id);
+  async deleteChild(
+    @SessionInfo() session: GetSessionInfoDto,
+    @Param('id') id: string,
+  ) {
+    const userId = session.id;
+    return this.childrenService.deleteChild(userId, +id);
   }
 }

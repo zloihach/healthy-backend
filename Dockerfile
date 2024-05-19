@@ -13,14 +13,19 @@ RUN npm install
 # Копируем весь проект в контейнер
 COPY . .
 
-# Устанавливаем переменную окружения для режима разработки
 ENV NODE_ENV=development
+
+# Генерируем клиент Prisma
+RUN npx prisma generate
 
 # Собираем проект
 RUN npm run build
+
+# Проверяем содержимое директории dist
+RUN ls -la dist/src
 
 # Открываем порт для приложения
 EXPOSE 3000
 
 # Запускаем приложение
-CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/src/main"]

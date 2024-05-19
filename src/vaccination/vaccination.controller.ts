@@ -16,8 +16,6 @@ import { UserVaccine } from '@prisma/client';
 import { CreateVaccinationDto } from '../vaccine/dto/createVaccination';
 import { UpdateVaccinationBodyDto } from './dto/updateVaccinationBody';
 import { SetVaccinationStatusBodyDto } from './dto/setVaccinationStatus';
-import { UserIdFromSession } from '../auth/decorators/user-id-from-session.decorator';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { SessionInfo } from '../auth/decorators/session-info.decorator';
 import { GetSessionInfoDto } from '../auth/dto/sessioninfo';
 import { AuthGuard } from '../auth/guards/auth.guard';

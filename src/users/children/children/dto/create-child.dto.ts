@@ -1,42 +1,67 @@
-import { IsBoolean, IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Sex } from '@prisma/client';
+import { Transform } from 'class-transformer';
 
+/**
+ * DTO для создания учетной записи ребенка
+ *
+ * @class
+ */
 export class CreateChildDto {
-  @ApiProperty()
+  /**
+   * Фамилия ребенка
+   * @type {string}
+   */
+  @ApiProperty({ type: 'string', example: 'Иванов' })
   @IsString()
   lastname: string;
 
-  @ApiProperty()
+  /**
+   * Имя ребенка
+   * @type {string}
+   */
+  @ApiProperty({ type: 'string', example: 'Иван' })
   @IsString()
   firstname: string;
 
-  @ApiProperty({ required: false })
+  /**
+   * Отчество ребенка (опционально)
+   * @type {string}
+   */
+  @ApiProperty({ type: 'string', example: 'Иванович', required: false })
   @IsOptional()
   @IsString()
   midname?: string;
 
-  @ApiProperty()
-  @IsDate()
-  dob: Date;
+  /**
+   * Дата рождения ребенка
+   * @type {string}
+   */
+  @ApiProperty({ type: 'string', format: 'date', example: '2015-06-01' })
+  @IsDateString()
+  dob: string;
 
-  @ApiProperty({ enum: Sex })
+  /**
+   * Пол ребенка
+   * @type {Sex}
+   */
+  @ApiProperty({ enum: Sex, example: Sex.MALE })
   @IsEnum(Sex)
   sex: Sex;
 
-  @ApiProperty()
+  /**
+   * Признак активности учетной записи ребенка
+   * @type {boolean}
+   */
+  @ApiProperty({ type: 'boolean', example: true })
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   @IsBoolean()
   is_active: boolean;
-
-  @ApiProperty()
-  @IsDate()
-  created_at: Date;
-
-  @ApiProperty()
-  @IsDate()
-  updated_at: Date;
-
-  @ApiProperty()
-  @IsString()
-  user_id: number;
 }
