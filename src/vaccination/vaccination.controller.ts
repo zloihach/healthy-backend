@@ -44,7 +44,7 @@ export class VaccinationController {
     return this.vaccinationService.getUserVaccinations(Number(userid));
   }
 
-  @Post('user-vaccinations')
+  @Get('user-vaccinations')
   @UseGuards(AuthGuard)
   @Roles(Role.User)
   @ApiOperation({ summary: 'Get all vaccinations for current user' })
