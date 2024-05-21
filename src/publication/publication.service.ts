@@ -1,13 +1,13 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Publication } from '@prisma/client';
-import { CreatePublicationBodyDto } from './dto/createPublicationDto';
-import { EditPublicationBodyDto } from './dto/editPublicationDto';
-import { SetPublicationStatusBodyDto } from './dto/setPublicationStatusDto';
-import { IPublicationService } from './interface';
+import { CreatePublicationBodyDto } from './dto/create-publication.dto';
+import { EditPublicationBodyDto } from './dto/edit-publication.dto';
+import { SetPublicationStatusBodyDto } from './dto/set-publication-status.dto';
+import { IPublicationService } from './interface/IPublicationService.interface';
 import { DbService } from '../db/db.service';
-import { SearchPublicationBodyDto } from './dto/searchPublicationDto';
+import { SearchPublicationBodyDto } from './dto/search-publication.dto';
 import { FileService } from '../files/file.service';
-import { PaginationQueryDto } from './dto/pagginationDto';
+import { PaginationQueryDto } from './dto/paggination.dto';
 import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
