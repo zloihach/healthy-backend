@@ -23,7 +23,11 @@ export class ChildrenService {
     const children = await this.db.child.findMany({
       where: { user_id: userId },
       include: {
-        ChildVaccine: true, // Включение списка вакцинаций
+        ChildVaccine: {
+          include: {
+            vaccine: true,
+          },
+        },
       },
     });
     if (!children.length) {
