@@ -72,6 +72,15 @@ export class CreateVaccinationDto {
   vaccination_date?: Date;
 
   /**
+   * Плановая дата вакцинации
+   * @type {Date|undefined}
+   */
+  @ApiProperty({ type: 'Date', required: false, example: '2023-01-15' })
+  @IsOptional()
+  @Type(() => Date)
+  planned_vaccination_date?: Date;
+
+  /**
    * Комментарий
    * @type {string|undefined}
    */
