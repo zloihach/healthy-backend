@@ -1,7 +1,7 @@
-import { CreateVaccinationDto } from '../../vaccine/dto/createVaccination';
+import { CreateVaccinationDto } from '../../vaccine/dto/create-vaccination.dto';
 import { UserVaccine } from '@prisma/client';
-import { UpdateVaccinationBodyDto } from '../dto/updateVaccinationBody';
-import { SetVaccinationStatusBodyDto } from '../dto/setVaccinationStatus';
+import { UpdateVaccinationBodyDto } from '../dto/update-vaccination-body.dto';
+import { SetVaccinationStatusBodyDto } from '../dto/set-vaccination-status.dto';
 
 export interface IVaccinationService {
   createVaccination(

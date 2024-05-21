@@ -1,11 +1,11 @@
 // src/publication/interface/ipublication.service.ts
 
 import { Publication } from '@prisma/client';
-import { CreatePublicationBodyDto } from '../dto/createPublicationDto';
-import { EditPublicationBodyDto } from '../dto/editPublicationDto';
-import { SetPublicationStatusBodyDto } from '../dto/setPublicationStatusDto';
-import { SearchPublicationBodyDto } from '../dto/searchPublicationDto';
-import { PaginationQueryDto } from '../dto/pagginationDto';
+import { CreatePublicationBodyDto } from '../dto/create-publication.dto';
+import { EditPublicationBodyDto } from '../dto/edit-publication.dto';
+import { SetPublicationStatusBodyDto } from '../dto/set-publication-status.dto';
+import { SearchPublicationBodyDto } from '../dto/search-publication.dto';
+import { PaginationQueryDto } from '../dto/paggination.dto';
 
 export interface IPublicationService {
   createPublication(
