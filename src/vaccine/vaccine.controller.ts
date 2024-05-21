@@ -22,9 +22,9 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { Vaccine } from '@prisma/client';
 import { VaccineService } from './vaccine.service';
-import { CreateVaccineDto } from './dto/createVaccine';
-import { EditVaccineDto } from './dto/editVaccine';
-import { SearchVaccineDto } from './dto/seacrhVaccine';
+import { CreateVaccineDto } from './dto/create-vaccine.dto';
+import { EditVaccineDto } from './dto/edit-vaccine.dto';
+import { SearchVaccineDto } from './dto/search-vaccine.dto';
 
 @Controller('vaccine')
 @ApiTags('Vaccine')

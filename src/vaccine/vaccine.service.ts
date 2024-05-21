@@ -1,10 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DbService } from '../db/db.service';
 import { Vaccine } from '@prisma/client';
-import { IVaccineService } from './interface';
-import { EditVaccineDto } from './dto/editVaccine';
-import { CreateVaccineDto } from './dto/createVaccine';
-import { SearchVaccineDto } from './dto/seacrhVaccine';
+import { IVaccineService } from './interface/IVaccineService.interface';
+import { EditVaccineDto } from './dto/edit-vaccine.dto';
+import { CreateVaccineDto } from './dto/create-vaccine.dto';
+import { SearchVaccineDto } from './dto/search-vaccine.dto';
 
 @Injectable()
 export class VaccineService implements IVaccineService {

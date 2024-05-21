@@ -74,35 +74,37 @@ model Vaccine {
 }
 
 model UserVaccine {
-  id               Int       @id @default(autoincrement())
-  vaccine          Vaccine   @relation(fields: [vaccine_id], references: [id])
-  vaccine_id       Int
-  user             User      @relation(fields: [user_id], references: [id])
-  user_id          Int
-  medical_center   String?
-  dose             Float?
-  serial_number    String?
-  vaccination_date DateTime? @db.Date()
-  commentary       String?
-  is_vaccinated    Boolean?
-  created_at       DateTime
-  updated_at       DateTime
+  id                       Int       @id @default(autoincrement())
+  vaccine                  Vaccine   @relation(fields: [vaccine_id], references: [id])
+  vaccine_id               Int
+  user                     User      @relation(fields: [user_id], references: [id])
+  user_id                  Int
+  medical_center           String?
+  dose                     Float?
+  serial_number            String?
+  vaccination_date         DateTime? @db.Date()
+  planned_vaccination_date DateTime?
+  commentary               String?
+  is_vaccinated            Boolean?
+  created_at               DateTime
+  updated_at               DateTime
 }
 
 model ChildVaccine {
-  id               Int       @id @default(autoincrement())
-  vaccine          Vaccine   @relation(fields: [vaccine_id], references: [id])
-  vaccine_id       Int
-  child            Child     @relation(fields: [child_id], references: [id])
-  child_id         Int
-  medical_center   String?
-  dose             Float?
-  serial_number    String?
-  vaccination_date DateTime?
-  commentary       String?
-  is_vaccinated    Boolean?
-  created_at       DateTime
-  updated_at       DateTime
+  id                       Int       @id @default(autoincrement())
+  vaccine                  Vaccine   @relation(fields: [vaccine_id], references: [id])
+  vaccine_id               Int
+  child                    Child     @relation(fields: [child_id], references: [id])
+  child_id                 Int
+  medical_center           String?
+  dose                     Float?
+  serial_number            String?
+  vaccination_date         DateTime?
+  planned_vaccination_date DateTime?
+  commentary               String?
+  is_vaccinated            Boolean?
+  created_at               DateTime
+  updated_at               DateTime
 }
 
 model Publication {
