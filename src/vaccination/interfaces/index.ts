@@ -8,7 +8,7 @@ export interface IVaccinationService {
     createVaccinationDto: CreateVaccinationDto,
   ): Promise<UserVaccine>;
   getUserVaccinations(userId: number): Promise<UserVaccine[]>;
-  createVaccinationCalendar(id: number): Promise<number>;
+  createVaccinationCalendar(id: number): Promise<UserVaccine[]>;
   fillUserVaccinationTable(userId: number): Promise<void>;
   updateVaccination(
     updateVaccinationBodyDto: UpdateVaccinationBodyDto,

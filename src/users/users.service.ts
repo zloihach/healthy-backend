@@ -50,7 +50,8 @@ export class UsersService implements IUserService {
     });
     await this.activateUser(newUser.id);
     await this.vaccinationService.fillUserVaccinationTable(newUser.id);
-    await this.vaccinationService.createVaccinationCalendar(newUser.id);
+    // Убедимся, что календарь вакцинаций создается после заполнения таблицы вакцинаций
+    // await this.vaccinationService.createVaccinationCalendar(newUser.id);
     return newUser;
   }
 
