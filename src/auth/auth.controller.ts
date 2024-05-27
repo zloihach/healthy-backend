@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -17,6 +18,7 @@ import { SignInBodyDto } from './dto/signin';
 import { SignUpBodyDto } from './dto/signup';
 import { GetSessionInfoDto } from './dto/sessioninfo';
 import { RedisService } from '../../redis/redis.service';
+import { GetCurrentUserDto } from './dto/get-current-user.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -84,5 +86,16 @@ export class AuthController {
     console.log(`Redis: Inserted session info into cache with key ${cacheKey}`);
 
     return session;
+  }
+
+  @Get('get-me')
+  @ApiOperation({ summary: 'Get user information' })
+  @UseGuards(AuthGuard)
+  @ApiOkResponse({
+    description: 'User information fetched successfully',
+    type: GetCurrentUserDto,
+  })
+  async getMe(@SessionInfo() session: GetSessionInfoDto): Promise<GetCurrentUserDto | null> {
+    return await this.authService.getMe(session.id);
   }
 }

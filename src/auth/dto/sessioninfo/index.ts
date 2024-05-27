@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '../../enums/role.enum';
+import { IsNumber } from 'class-validator';
 
 /**
  * DTO для получения информации о сессии
@@ -12,6 +13,7 @@ export class GetSessionInfoDto {
    * @type {number}
    */
   @ApiProperty({ example: 1 })
+  @IsNumber()
   id: number;
 
   /**

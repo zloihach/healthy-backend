@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -92,18 +93,18 @@ export class ChildrenController {
     return this.childrenService.updateChild(session.id, +id, updateChildDto);
   }
 
-  @Delete(':id')
-  @UseGuards(AuthGuard)
+  @Delete(':childId')
+  @UseGuards(AuthGuard, IsParentGuard)
   @Roles(Role.User)
   @ApiOperation({ summary: 'Delete a child' })
   @ApiOkResponse({ description: 'Child deleted successfully' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiParam({ name: 'id', description: 'Child ID' })
+  @ApiParam({ name: 'childId', description: 'Child ID' })
   async deleteChild(
     @SessionInfo() session: GetSessionInfoDto,
-    @Param('id') id: string,
+    @Param('childId', ParseIntPipe) childId: number,
   ) {
-    return this.childrenService.deleteChild(session.id, +id);
+    await this.childrenService.deleteChild(childId);
   }
 
   @Post(':childId/vaccinations')

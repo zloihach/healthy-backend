@@ -10,6 +10,8 @@ import { SignUpBodyDto } from './dto/signup';
 import { CookieService } from './shared/cookie.service';
 import { Response } from 'express';
 import { RedisService } from '../../redis/redis.service';
+import { User } from '@prisma/client';
+import { GetCurrentUserDto } from './dto/get-current-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -99,5 +101,35 @@ export class AuthService {
   async signOut(res: Response) {
     this.cookieService.removeToken(res);
     console.log('User signed out and token removed from cookies');
+  }
+
+  async getMe(id: number): Promise<GetCurrentUserDto | null> {
+    try {
+      const user = await this.userService.getUserById(id);
+      if (!user) {
+        return null;
+      }
+      return this.toGetCurrentUserDto(user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private toGetCurrentUserDto(user: User): GetCurrentUserDto {
+    return {
+      id: user.id,
+      lastname: user.lastname,
+      firstname: user.firstname,
+      midname: user.midname,
+      dob: user.dob,
+      email: user.email,
+      sex: user.sex,
+      role: user.role,
+      is_active: user.is_active,
+      is_confirmed_email: user.is_confirmed_email,
+      notification_period: user.notification_period,
+      created_at: user.created_at,
+      edited_at: user.edited_at,
+    };
   }
 }
