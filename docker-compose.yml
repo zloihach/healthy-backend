@@ -149,7 +149,7 @@ services:
       - /usr/src/app/node_modules
     env_file: .env
     environment:
-      SKIP_PRISMA_GENERATE: true
+      SKIP_PRISMA_GENERATE: false
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: password
