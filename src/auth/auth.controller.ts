@@ -95,7 +95,9 @@ export class AuthController {
     description: 'User information fetched successfully',
     type: GetCurrentUserDto,
   })
-  async getMe(@SessionInfo() session: GetSessionInfoDto): Promise<GetCurrentUserDto | null> {
+  async getMe(
+    @SessionInfo() session: GetSessionInfoDto,
+  ): Promise<GetCurrentUserDto | null> {
     return await this.authService.getMe(session.id);
   }
 }
