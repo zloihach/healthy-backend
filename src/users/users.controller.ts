@@ -15,9 +15,6 @@ import { Role } from '../auth/enums/role.enum';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { SessionInfo } from '../auth/decorators/session-info.decorator';
-import { GetSessionInfoDto } from '../auth/dto/sessioninfo';
-import { GetCurrentUserDto } from './dto/get-current-user.dto';
 import { DbService } from '../db/db.service';
 
 @Controller('users')

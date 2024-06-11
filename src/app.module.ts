@@ -32,6 +32,9 @@ import { MetricsController } from './metrics/metrics.controller';
 import { MailController } from './notification/mailer/mailer.controller';
 import { MailService } from './common/config/mail-service.config';
 import { MailModule } from './notification/mailer/mailer.module';
+import { StatsModule } from './stats/stats.module';
+import { StatsService } from './stats/stats.service';
+import { StatsController } from './stats/stats.controller';
 
 @Module({
   imports: [
@@ -52,6 +55,7 @@ import { MailModule } from './notification/mailer/mailer.module';
     S3Module,
     RedisModule,
     MailModule,
+    StatsModule,
   ],
   controllers: [
     AppController,
@@ -61,6 +65,7 @@ import { MailModule } from './notification/mailer/mailer.module';
     VaccinationController,
     MetricsController,
     MailController,
+    StatsController,
   ],
   providers: [
     AppService,
@@ -70,6 +75,7 @@ import { MailModule } from './notification/mailer/mailer.module';
     AccessControlService,
     VaccinationService,
     MailService,
+    StatsService,
   ],
 })
 export class AppModule implements NestModule {
